@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="estilos/style.css">
+    <link rel="stylesheet" href="estilos/medias-queries.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+
+</head>
+<body>
+    <main>
+        <section id="login">
+            <div id="img">
+                <!-- Adicione uma imagem, se necessário -->
+            </div>
+            <div id="form">
+                <h1>Login</h1>
+                <form action="login.js" method="post" autocomplete="on">
+                    <!-- Campo de Email -->
+                    <div id="email">
+                        <span class="material-symbols-outlined" id="person"> person </span>
+                        <label for="id_email">Email:</label> <br>
+                        <input type="email" name="email" id="id_email" 
+                            autocomplete="email" required size="30" placeholder="exemplo@email.com">
+                    </div>
+
+                    <!-- Campo de Senha -->
+                    <div id="password">
+                        <span class="material-symbols-outlined" id="lock"> lock </span>
+                        <label for="id_senha">Senha:</label> <br>
+                        <input type="password" name="senha" id="id_senha" 
+                            autocomplete="current-password" required minlength="8" maxlength="20" 
+                            size="30" placeholder="********">
+                    </div>
+
+                    <!-- Botão de Login -->
+                    <div id="btn_login">
+                        <input type="submit" value="Login">
+                    </div>
+
+                    <!-- Link para Recuperar Senha -->
+                    <div id="btn_forgot">
+                        <a href="recuperar-senha.html">Esqueceu a senha?</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

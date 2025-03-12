@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+/* Versão para Tablets, Desktops e TVs */
+@media screen and (min-width: 768px) {
+    html, body {
+        background-image: linear-gradient(to bottom, var(--cor0), var(--cor3));
+    }
+
+    #login {
+        width: 80vw;
+        max-width: 600px;
+        display: flex;
+    }
+
+    #login #img {
+        background-image: url(../imgs/psiconnect-sidelogo.png);
+        background-size: cover;
+        background-position: left bottom;
+        width: 30vw;
+        height: 50vh;
+    }
+
+    #login #form {
+        width: 70vw;
+        padding-left: 40px;
+    }
+}
