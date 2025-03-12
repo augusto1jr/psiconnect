@@ -39,21 +39,6 @@ CREATE TABLE pacientes (
     beneficio_social ENUM('nenhum', 'estudante', 'cadunico') DEFAULT 'nenhum'
 ) DEFAULT CHARACTER SET utf8mb4;
 
--- Tabela de Benefícios Sociais
-CREATE TABLE beneficios_sociais (
-    id_beneficio INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL UNIQUE
-) DEFAULT CHARACTER SET utf8mb4;
-
--- Relacionamento entre Pacientes e Benefícios Sociais
-CREATE TABLE paciente_beneficio (
-    id_paciente INT NOT NULL,
-    id_beneficio INT NOT NULL,
-    PRIMARY KEY (id_paciente, id_beneficio),
-    FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE,
-    FOREIGN KEY (id_beneficio) REFERENCES beneficios_sociais(id_beneficio) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
-
 -- Tabela de Especialidades
 CREATE TABLE especialidades (
     id_especialidade INT PRIMARY KEY AUTO_INCREMENT,
