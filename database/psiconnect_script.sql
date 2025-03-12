@@ -23,9 +23,12 @@ CREATE TABLE enderecos_psicologos (
     cidade VARCHAR(100) NOT NULL,
     estado VARCHAR(50) NOT NULL,
     cep VARCHAR(10) NOT NULL,
+    latitude DOUBLE NOT NULL,  
+    longitude DOUBLE NOT NULL,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
     CHECK ((SELECT modalidade_atendimento FROM psicologos WHERE id_psicologo = enderecos_psicologos.id_psicologo) IN ('presencial', 'híbrido'))
 ) DEFAULT CHARACTER SET utf8mb4;
+
 
 -- Tabela de Pacientes
 CREATE TABLE pacientes (
