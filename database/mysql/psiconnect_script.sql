@@ -1,3 +1,5 @@
+-- ########## Tabelas Relacionadas aos Psicólogos ##########
+
 -- Tabela de Psicólogos
 CREATE TABLE psicologos (
     id_psicologo INT PRIMARY KEY AUTO_INCREMENT,
@@ -23,35 +25,9 @@ CREATE TABLE enderecos_psicologos (
     cidade VARCHAR(100) NOT NULL,
     estado VARCHAR(50) NOT NULL,
     cep VARCHAR(10) NOT NULL,
-    FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
-    CHECK ((SELECT modalidade_atendimento FROM psicologos WHERE id_psicologo = enderecos_psicologos.id_psicologo) IN ('presencial', 'híbrido'))
-) DEFAULT CHARACTER SET utf8mb4;
-
--- Tabela de Pacientes
-CREATE TABLE pacientes (
-    id_paciente INT PRIMARY KEY AUTO_INCREMENT,
-    cpf VARCHAR(14) NOT NULL UNIQUE,
-    nome_paciente VARCHAR(100) NOT NULL,
-    email_paciente VARCHAR(100) NOT NULL UNIQUE,
-    bio_paciente VARCHAR(300),
-    contato VARCHAR(50) NOT NULL,
-    senha_hash VARCHAR(255) NOT NULL,
-    beneficio_social ENUM('nenhum', 'estudante', 'cadunico') DEFAULT 'nenhum'
-) DEFAULT CHARACTER SET utf8mb4;
-
--- Tabela de Benefícios Sociais
-CREATE TABLE beneficios_sociais (
-    id_beneficio INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL UNIQUE
-) DEFAULT CHARACTER SET utf8mb4;
-
--- Relacionamento entre Pacientes e Benefícios Sociais
-CREATE TABLE paciente_beneficio (
-    id_paciente INT NOT NULL,
-    id_beneficio INT NOT NULL,
-    PRIMARY KEY (id_paciente, id_beneficio),
-    FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE,
-    FOREIGN KEY (id_beneficio) REFERENCES beneficios_sociais(id_beneficio) ON DELETE CASCADE
+    latitude DOUBLE NOT NULL,  
+    longitude DOUBLE NOT NULL,
+    FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4;
 
 -- Tabela de Especialidades
@@ -84,6 +60,37 @@ CREATE TABLE psicologo_abordagem (
     FOREIGN KEY (id_abordagem) REFERENCES abordagens(id_abordagem) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4;
 
+
+
+-- ########## Tabelas Relacionadas aos Pacientes ##########
+
+-- Tabela de Pacientes
+CREATE TABLE pacientes (
+    id_paciente INT PRIMARY KEY AUTO_INCREMENT,
+    cpf VARCHAR(14) NOT NULL UNIQUE,
+    nome_paciente VARCHAR(100) NOT NULL,
+    email_paciente VARCHAR(100) NOT NULL UNIQUE,
+    bio_paciente VARCHAR(300),
+    contato VARCHAR(50) NOT NULL,
+    senha_hash VARCHAR(255) NOT NULL,
+    beneficio_social ENUM('nenhum', 'estudante', 'cadunico') DEFAULT 'nenhum'
+) DEFAULT CHARACTER SET utf8mb4;
+
+-- Tabela de Endereços dos Pacientes
+CREATE TABLE enderecos_pacientes (
+    id_paciente INT PRIMARY KEY,
+    rua VARCHAR(150) NOT NULL,
+    numero VARCHAR(10) NOT NULL,
+    complemento VARCHAR(50),
+    bairro VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    cep VARCHAR(10) NOT NULL,
+    latitude DOUBLE NOT NULL,  
+    longitude DOUBLE NOT NULL,
+    FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE
+) DEFAULT CHARACTER SET utf8mb4;
+
 -- Tabela de Preferências de Especialidades dos Pacientes
 CREATE TABLE preferencia_especialidades (
     id_paciente INT NOT NULL,
@@ -101,6 +108,9 @@ CREATE TABLE preferencia_abordagem (
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE,
     FOREIGN KEY (id_abordagem) REFERENCES abordagens(id_abordagem) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4;
+
+
+-- ########## Tabelas de Relacionamento entre os Psicólogos e Pacientes ##########
 
 -- Tabela de Consultas
 CREATE TABLE consultas (
@@ -129,6 +139,7 @@ CREATE TABLE avaliacoes (
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4;
+
 
 -- Trigger para aplicar valor social automaticamente antes de inserir consulta
 DELIMITER $$
