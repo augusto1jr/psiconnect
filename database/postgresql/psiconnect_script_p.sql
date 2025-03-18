@@ -7,8 +7,8 @@ CREATE TABLE psicologos (
     nome_psicologo VARCHAR(100) NOT NULL,
     email_psicologo VARCHAR(100) NOT NULL UNIQUE,
     bio_psicologo VARCHAR(300),
-    formacao VARCHAR(300),
-    contato VARCHAR(50) NOT NULL,
+    formacao_psicologo VARCHAR(300),
+    contato_psicologo VARCHAR(50) NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
     valor_padrao_consulta DECIMAL(10,2) NOT NULL,
     aceita_valor_social BOOLEAN DEFAULT FALSE,
@@ -70,7 +70,7 @@ CREATE TABLE pacientes (
     nome_paciente VARCHAR(100) NOT NULL,
     email_paciente VARCHAR(100) NOT NULL UNIQUE,
     bio_paciente VARCHAR(300),
-    contato VARCHAR(50) NOT NULL,
+    contato_paciente VARCHAR(50) NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
     beneficio_social TEXT CHECK (beneficio_social IN ('nenhum', 'estudante', 'cadunico')) DEFAULT 'nenhum'
 );
