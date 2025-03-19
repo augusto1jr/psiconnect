@@ -1,14 +1,16 @@
-package entities;
+package dev.psiconnect.entities;
 
+import dev.psiconnect.dtos.requests.PsicologoRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
 @Table(name = "psicologos")
+@Entity(name = "psicologos")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Psicologo {
 
     @Id
@@ -27,10 +29,10 @@ public class Psicologo {
     @Column(name = "bio_psicologo")
     private String bio;
 
-    @Column(name = "formacao")
+    @Column(name = "formacao_psicologo")
     private String formacao;
 
-    @Column(name = "contato", nullable = false)
+    @Column(name = "contato_psicologo", nullable = false)
     private String contato;
 
     @Column(name = "senha_hash", nullable = false)
@@ -47,11 +49,21 @@ public class Psicologo {
     private ModalidadeAtendimento modalidadeAtendimento;
 
     public enum ModalidadeAtendimento {
-        REMOTO,
-        PRESENCIAL,
-        HIBRIDO;
+        remoto,
+        presencial,
+        hibrido;
+    }
+
+    public Psicologo(PsicologoRequestDTO data) {
+        this.crp = data.crp();
+        this.nome = data.nome();
+        this.email = data.email();
+        this.bio = data.bio();
+        this.formacao = data.formacao();
+        this.contato = data.contato();
+        this.senhaHash = data.senhaHash();
+        this.valorPadraoConsulta = data.valorPadraoConsulta();
+        this.aceitaValorSocial = data.aceitaValorSocial();
+        this.modalidadeAtendimento = data.modalidadeAtendimento();
     }
 }
-
-
-
