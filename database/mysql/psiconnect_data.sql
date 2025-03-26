@@ -28,7 +28,7 @@ INSERT INTO abordagens (nome_abordagem) VALUES
 INSERT INTO psicologos (crp, nome_psicologo, email_psicologo, bio_psicologo, formacao, contato, senha_hash, valor_padrao_consulta, aceita_valor_social, modalidade_atendimento) VALUES
 ('06/123456', 'Dr. João Silva', 'joao.silva@email.com', 'Especialista em TCC.', 'USP', '(11) 91234-5678', 'senha_hash1', 150.00, TRUE, 'remoto'),
 ('07/654321', 'Dra. Maria Oliveira', 'maria.oliveira@email.com', 'Foco em traumas e luto.', 'PUC', '(21) 92345-6789', 'senha_hash2', 180.00, FALSE, 'presencial'),
-('08/112233', 'Dr. Ricardo Mendes', 'ricardo.mendes@email.com', 'Atendimento humanizado.', 'Unicamp', '(31) 93456-7890', 'senha_hash3', 200.00, TRUE, 'híbrido');
+('08/112233', 'Dr. Ricardo Mendes', 'ricardo.mendes@email.com', 'Atendimento humanizado.', 'Unicamp', '(31) 93456-7890', 'senha_hash3', 200.00, TRUE, 'hibrido');
 
 -- ########## Inserindo Endereços dos Psicólogos ##########
 INSERT INTO enderecos_psicologos (id_psicologo, rua, numero, complemento, bairro, cidade, estado, cep, latitude, longitude) VALUES

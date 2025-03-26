@@ -12,7 +12,7 @@ CREATE TABLE psicologos (
     senha_hash VARCHAR(255) NOT NULL,
     valor_padrao_consulta DECIMAL(10,2) NOT NULL,
     aceita_valor_social BOOLEAN DEFAULT FALSE,
-    modalidade_atendimento ENUM('remoto', 'presencial', 'híbrido') NOT NULL DEFAULT 'remoto'
+    modalidade_atendimento ENUM('remoto', 'presencial', 'hibrido') NOT NULL DEFAULT 'remoto'
 ) DEFAULT CHARACTER SET utf8mb4;
 
 -- Tabela de Endereços dos Psicólogos
