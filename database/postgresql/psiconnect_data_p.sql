@@ -63,6 +63,3 @@ INSERT INTO avaliacoes (id_consulta, id_paciente, id_psicologo, nota, comentario
 (1, 1, 1, 5, 'Ótima consulta, muito esclarecedor!', '2025-03-21 14:30:00'),
 (2, 2, 2, 4, 'Gostei muito, profissional excelente.', '2025-03-22 16:00:00'),
 (3, 3, 3, 3, 'Foi bom, mas poderia ser melhor.', '2025-03-23 17:00:00');
-
-SELECT DISTINCT modalidade_atendimento FROM psicologos;
-
