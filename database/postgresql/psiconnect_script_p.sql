@@ -8,7 +8,7 @@ CREATE TABLE psicologos (
     email_psicologo VARCHAR(100) NOT NULL UNIQUE,
     bio_psicologo VARCHAR(300),
     formacao_psicologo VARCHAR(300),
-    contato_psicologo VARCHAR(50) NOT NULL,  -- Corrigido para sempre exigir um valor
+    contato_psicologo VARCHAR(50) NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
     valor_padrao_consulta DECIMAL(10,2) NOT NULL,
     aceita_valor_social BOOLEAN DEFAULT FALSE,
