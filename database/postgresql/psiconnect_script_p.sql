@@ -117,7 +117,7 @@ CREATE TABLE consultas (
     id_psicologo INT NOT NULL,
     id_paciente INT NOT NULL,
     data_consulta TIMESTAMP NOT NULL,
-    status_consulta TEXT NOT NULL CHECK (status_consulta IN ('agendada', 'concluída', 'cancelada')) DEFAULT 'agendada',
+    status_consulta TEXT NOT NULL CHECK (status_consulta IN ('agendada', 'concluida', 'cancelada')) DEFAULT 'agendada',
     tipo_consulta TEXT NOT NULL CHECK (tipo_consulta IN ('remota', 'presencial')),
     plataforma_link VARCHAR(255),
     valor_consulta DECIMAL(10,2) NOT NULL,
@@ -156,7 +156,7 @@ BEGIN
     IF beneficio IN ('estudante', 'cadunico') AND aceita_social = TRUE THEN
         NEW.valor_consulta := 50.00;
     ELSE
-        NEW.valor_consulta := COALESCE(valor_base, NEW.valor_consulta);  -- Evita erro caso NULL
+        NEW.valor_consulta := COALESCE(valor_base, NEW.valor_consulta);
     END IF;
 
     RETURN NEW;

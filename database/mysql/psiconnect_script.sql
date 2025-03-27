@@ -118,7 +118,7 @@ CREATE TABLE consultas (
     id_psicologo INT NOT NULL,
     id_paciente INT NOT NULL,
     data_consulta DATETIME NOT NULL,
-    status_consulta ENUM('agendada', 'concluída', 'cancelada') DEFAULT 'agendada',
+    status_consulta ENUM('agendada', 'concluida', 'cancelada') DEFAULT 'agendada',
     tipo_consulta ENUM('remota', 'presencial') NOT NULL,
     plataforma_link VARCHAR(255) DEFAULT NULL,
     valor_consulta DECIMAL(10,2) NOT NULL,
