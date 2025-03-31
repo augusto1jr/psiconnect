@@ -44,7 +44,7 @@ public class Psicologo {
     @Column(name = "aceita_valor_social")
     private Boolean aceitaValorSocial;
 
-    @Enumerated(EnumType.STRING) // Garante que o valor será armazenado como texto no banco
+    @Enumerated(EnumType.STRING)
     @Column(name = "modalidade_atendimento", nullable = false)
     private ModalidadeAtendimento modalidadeAtendimento;
 
@@ -53,6 +53,9 @@ public class Psicologo {
         presencial,
         hibrido;
     }
+
+    @OneToOne(mappedBy = "psicologo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private EnderecoPsicologo endereco;
 
     public Psicologo(PsicologoRequestDTO data) {
         this.crp = data.crp();
@@ -65,5 +68,9 @@ public class Psicologo {
         this.valorPadraoConsulta = data.valorPadraoConsulta();
         this.aceitaValorSocial = data.aceitaValorSocial();
         this.modalidadeAtendimento = data.modalidadeAtendimento();
+        if (data.endereco() != null) {
+            this.endereco = new EnderecoPsicologo(data.endereco());
+            this.endereco.setPsicologo(this);
+        }
     }
 }

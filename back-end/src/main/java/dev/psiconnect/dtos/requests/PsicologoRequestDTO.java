@@ -1,5 +1,6 @@
 package dev.psiconnect.dtos.requests;
 
+import dev.psiconnect.entities.EnderecoPsicologo;
 import dev.psiconnect.entities.Psicologo.ModalidadeAtendimento;
 
 public record PsicologoRequestDTO(
@@ -12,5 +13,6 @@ public record PsicologoRequestDTO(
         String senhaHash,
         Double valorPadraoConsulta,
         Boolean aceitaValorSocial,
-        ModalidadeAtendimento modalidadeAtendimento
+        ModalidadeAtendimento modalidadeAtendimento,
+        EnderecoPsiRequestDTO endereco
 ) {}

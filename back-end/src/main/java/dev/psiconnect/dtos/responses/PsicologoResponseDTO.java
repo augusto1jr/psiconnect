@@ -10,10 +10,10 @@ public record PsicologoResponseDTO(
         String bio,
         String formacao,
         String contato,
-        String senhaHash,
         Double valorPadraoConsulta,
         Boolean aceitaValorSocial,
-        String modalidadeAtendimento
+        String modalidadeAtendimento,
+        EnderecoPsiResponseDTO endereco
 ) {
     public PsicologoResponseDTO(Psicologo psicologo) {
         this(
@@ -24,10 +24,10 @@ public record PsicologoResponseDTO(
                 psicologo.getBio(),
                 psicologo.getFormacao(),
                 psicologo.getContato(),
-                psicologo.getSenhaHash(),
                 psicologo.getValorPadraoConsulta(),
                 psicologo.getAceitaValorSocial(),
-                psicologo.getModalidadeAtendimento().name()
+                psicologo.getModalidadeAtendimento().name(),
+                psicologo.getEndereco() != null ? new EnderecoPsiResponseDTO(psicologo.getEndereco()) : null
         );
     }
 }
