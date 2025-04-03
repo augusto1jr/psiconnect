@@ -3,6 +3,7 @@ package dev.psiconnect.entities;
 import dev.psiconnect.dtos.requests.PsicologoRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Table(name = "psicologos")
 @Entity(name = "psicologos")
@@ -57,7 +58,24 @@ public class Psicologo {
     @OneToOne(mappedBy = "psicologo", cascade = CascadeType.ALL, orphanRemoval = true)
     private EnderecoPsicologo endereco;
 
-    public Psicologo(PsicologoRequestDTO data) {
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "psicologos_especialidades",
+            joinColumns = @JoinColumn(name = "id_psicologo"),
+            inverseJoinColumns = @JoinColumn(name = "id_especialidade")
+    )
+    private List<Especialidade> especialidades;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "psicologos_abordagens",
+            joinColumns = @JoinColumn(name = "id_psicologo"),
+            inverseJoinColumns = @JoinColumn(name = "id_abordagem")
+    )
+    private List<Abordagem> abordagens;
+
+
+    public Psicologo(PsicologoRequestDTO data, List<Especialidade> especialidades, List<Abordagem> abordagens) {
         this.crp = data.crp();
         this.nome = data.nome();
         this.email = data.email();
@@ -68,9 +86,14 @@ public class Psicologo {
         this.valorPadraoConsulta = data.valorPadraoConsulta();
         this.aceitaValorSocial = data.aceitaValorSocial();
         this.modalidadeAtendimento = data.modalidadeAtendimento();
+
         if (data.endereco() != null) {
             this.endereco = new EnderecoPsicologo(data.endereco());
             this.endereco.setPsicologo(this);
         }
+
+        this.especialidades = especialidades;
+        this.abordagens = abordagens;
     }
+
 }

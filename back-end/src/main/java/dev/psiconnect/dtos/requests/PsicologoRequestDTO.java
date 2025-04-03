@@ -1,7 +1,7 @@
 package dev.psiconnect.dtos.requests;
 
-import dev.psiconnect.entities.EnderecoPsicologo;
 import dev.psiconnect.entities.Psicologo.ModalidadeAtendimento;
+import java.util.List;
 
 public record PsicologoRequestDTO(
         String crp,
@@ -14,5 +14,7 @@ public record PsicologoRequestDTO(
         Double valorPadraoConsulta,
         Boolean aceitaValorSocial,
         ModalidadeAtendimento modalidadeAtendimento,
-        EnderecoPsiRequestDTO endereco
+        EnderecoPsiRequestDTO endereco,
+        List<Long> especialidades,
+        List<Long> abordagens
 ) {}
