@@ -1,3 +1,13 @@
+-- ########## CRIANDO O BANCO DE DADOS ##########
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'psiconnect') THEN
+        CREATE DATABASE psiconnect;
+    END IF;
+END
+$$;
+
 -- ########## Tabelas Relacionadas aos Psicólogos ##########
 
 -- Tabela de Psicólogos
@@ -43,7 +53,7 @@ CREATE TABLE abordagens (
 );
 
 -- Relacionamento entre Psicólogos e Especialidades (N:N)
-CREATE TABLE psicologo_especialidade (
+CREATE TABLE psicologos_especialidades (
     id_psicologo INT NOT NULL,
     id_especialidade INT NOT NULL,
     PRIMARY KEY (id_psicologo, id_especialidade),
@@ -52,7 +62,7 @@ CREATE TABLE psicologo_especialidade (
 );
 
 -- Relacionamento entre Psicólogos e Abordagens (N:N)
-CREATE TABLE psicologo_abordagem (
+CREATE TABLE psicologos_abordagens (
     id_psicologo INT NOT NULL,
     id_abordagem INT NOT NULL,
     PRIMARY KEY (id_psicologo, id_abordagem),
@@ -100,7 +110,7 @@ CREATE TABLE preferencia_especialidades (
 );
 
 -- Tabela de Preferências de Abordagem dos Pacientes
-CREATE TABLE preferencia_abordagem (
+CREATE TABLE preferencia_abordagens (
     id_paciente INT NOT NULL,
     id_abordagem INT NOT NULL,
     PRIMARY KEY (id_paciente, id_abordagem),
@@ -119,7 +129,6 @@ CREATE TABLE consultas (
     data_consulta TIMESTAMP NOT NULL,
     status_consulta TEXT NOT NULL CHECK (status_consulta IN ('agendada', 'concluida', 'cancelada')) DEFAULT 'agendada',
     tipo_consulta TEXT NOT NULL CHECK (tipo_consulta IN ('remota', 'presencial')),
-    plataforma_link VARCHAR(255),
     valor_consulta DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE

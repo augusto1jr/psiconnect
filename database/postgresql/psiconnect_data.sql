@@ -45,18 +45,18 @@ INSERT INTO enderecos_pacientes (id_paciente, rua, numero, complemento, bairro, 
 (2, 'Avenida Brasil', '200', NULL, 'Copacabana', 'Rio de Janeiro', 'RJ', '22200-000', -22.9707, -43.1823);
 
 -- Inserindo Relacionamento entre Psicólogos e Especialidades
-INSERT INTO psicologo_especialidade (id_psicologo, id_especialidade) VALUES
+INSERT INTO psicologos_especialidades (id_psicologo, id_especialidade) VALUES
 (1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6);
 
 -- Inserindo Relacionamento entre Psicólogos e Abordagens
-INSERT INTO psicologo_abordagem (id_psicologo, id_abordagem) VALUES
+INSERT INTO psicologos_abordagens (id_psicologo, id_abordagem) VALUES
 (1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6);
 
 -- Inserindo Consultas
-INSERT INTO consultas (id_psicologo, id_paciente, data_consulta, status_consulta, tipo_consulta, plataforma_link, valor_consulta) VALUES
-(1, 1, '2025-03-20 14:00:00', 'agendada', 'remota', 'https://meet.example.com/joao123', 50.00),
-(2, 2, '2025-03-21 15:30:00', 'agendada', 'remota', 'https://meet.example.com/maria456', 180.00),
-(3, 3, '2025-03-22 16:00:00', 'agendada', 'presencial', NULL, 50.00);
+INSERT INTO consultas (id_psicologo, id_paciente, data_consulta, status_consulta, tipo_consulta, valor_consulta) VALUES
+(1, 1, '2025-03-20 14:00:00', 'agendada', 'remota', 50.00),
+(2, 2, '2025-03-21 15:30:00', 'agendada', 'remota', 180.00),
+(3, 3, '2025-03-22 16:00:00', 'agendada', 'presencial', 50.00);
 
 -- Inserindo Avaliações
 INSERT INTO avaliacoes (id_consulta, id_paciente, id_psicologo, nota, comentario, data_avaliacao) VALUES

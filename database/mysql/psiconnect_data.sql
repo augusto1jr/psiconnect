@@ -47,10 +47,10 @@ INSERT INTO enderecos_pacientes (id_paciente, rua, numero, complemento, bairro, 
 (2, 'Av. Brasil', '1000', NULL, 'Centro', 'Rio de Janeiro', 'RJ', '20000-000', -22.9068, -43.1729);
 
 -- ########## Inserindo Consultas ##########
-INSERT INTO consultas (id_psicologo, id_paciente, data_consulta, status_consulta, tipo_consulta, plataforma_link, valor_consulta) VALUES
-(1, 1, '2025-03-10 10:00:00', 'agendada', 'remota', 'https://meet.example.com/joaosilva', 50.00),
-(2, 2, '2025-03-11 15:00:00', 'agendada', 'presencial', NULL, 180.00),
-(3, 3, '2025-03-12 18:30:00', 'concluída', 'remota', 'https://meet.example.com/ricardomendes', 200.00);
+INSERT INTO consultas (id_psicologo, id_paciente, data_consulta, status_consulta, tipo_consulta, valor_consulta) VALUES
+(1, 1, '2025-03-10 10:00:00', 'agendada', 'remota', 50.00),
+(2, 2, '2025-03-11 15:00:00', 'agendada', 'presencial', 180.00),
+(3, 3, '2025-03-12 18:30:00', 'concluída', 'remota', 200.00);
 
 -- ########## Inserindo Avaliações ##########
 INSERT INTO avaliacoes (id_consulta, id_paciente, id_psicologo, nota, comentario, data_avaliacao) VALUES

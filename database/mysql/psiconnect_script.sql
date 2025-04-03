@@ -120,7 +120,6 @@ CREATE TABLE consultas (
     data_consulta DATETIME NOT NULL,
     status_consulta ENUM('agendada', 'concluida', 'cancelada') DEFAULT 'agendada',
     tipo_consulta ENUM('remota', 'presencial') NOT NULL,
-    plataforma_link VARCHAR(255) DEFAULT NULL,
     valor_consulta DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE
