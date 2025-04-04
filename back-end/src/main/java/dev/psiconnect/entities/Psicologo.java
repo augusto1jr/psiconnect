@@ -21,29 +21,32 @@ public class Psicologo {
     @Column(name = "crp", unique = true, nullable = false)
     private String crp;
 
-    @Column(name = "nome_psicologo", nullable = false)
+    @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "email_psicologo", unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "bio_psicologo")
+    @Column(name = "foto")
+    private String foto;
+
+    @Column(name = "bio")
     private String bio;
 
-    @Column(name = "formacao_psicologo")
+    @Column(name = "formacao")
     private String formacao;
 
-    @Column(name = "contato_psicologo", nullable = false)
+    @Column(name = "contato", nullable = false)
     private String contato;
 
     @Column(name = "senha_hash", nullable = false)
     private String senhaHash;
 
-    @Column(name = "valor_padrao_consulta", nullable = false)
-    private Double valorPadraoConsulta;
+    @Column(name = "valor_consulta", nullable = false)
+    private Double valorConsulta;
 
-    @Column(name = "aceita_valor_social")
-    private Boolean aceitaValorSocial;
+    @Column(name = "aceita_beneficio")
+    private Boolean aceitaBeneficio;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "modalidade_atendimento", nullable = false)
@@ -79,12 +82,13 @@ public class Psicologo {
         this.crp = data.crp();
         this.nome = data.nome();
         this.email = data.email();
+        this.foto = data.foto();
         this.bio = data.bio();
         this.formacao = data.formacao();
         this.contato = data.contato();
         this.senhaHash = data.senhaHash();
-        this.valorPadraoConsulta = data.valorPadraoConsulta();
-        this.aceitaValorSocial = data.aceitaValorSocial();
+        this.valorConsulta = data.valorConsulta();
+        this.aceitaBeneficio = data.aceitaBeneficio();
         this.modalidadeAtendimento = data.modalidadeAtendimento();
 
         if (data.endereco() != null) {

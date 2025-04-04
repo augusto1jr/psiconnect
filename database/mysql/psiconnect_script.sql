@@ -1,19 +1,26 @@
+-- ########## CRIANDO O BANCO DE DADOS ##########
+
+CREATE DATABASE IF NOT EXISTS psiconnect;
+
+USE psiconnect;
+
 -- ########## Tabelas Relacionadas aos Psicólogos ##########
 
 -- Tabela de Psicólogos
 CREATE TABLE psicologos (
-    id_psicologo INT PRIMARY KEY AUTO_INCREMENT,
+    id_psicologo INT AUTO_INCREMENT PRIMARY KEY,
     crp VARCHAR(10) NOT NULL UNIQUE,
-    nome_psicologo VARCHAR(100) NOT NULL,
-    email_psicologo VARCHAR(100) NOT NULL UNIQUE,
-    bio_psicologo VARCHAR(300),
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    foto VARCHAR(255) NOT NULL,
+    bio VARCHAR(300),
     formacao VARCHAR(300),
     contato VARCHAR(50) NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
-    valor_padrao_consulta DECIMAL(10,2) NOT NULL,
-    aceita_valor_social BOOLEAN DEFAULT FALSE,
+    valor_consulta DECIMAL(10,2) NOT NULL,
+    aceita_beneficio BOOLEAN DEFAULT FALSE,
     modalidade_atendimento ENUM('remoto', 'presencial', 'hibrido') NOT NULL DEFAULT 'remoto'
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 -- Tabela de Endereços dos Psicólogos
 CREATE TABLE enderecos_psicologos (
@@ -25,56 +32,56 @@ CREATE TABLE enderecos_psicologos (
     cidade VARCHAR(100) NOT NULL,
     estado VARCHAR(50) NOT NULL,
     cep VARCHAR(10) NOT NULL,
-    latitude DOUBLE NOT NULL,  
+    latitude DOUBLE NOT NULL,
     longitude DOUBLE NOT NULL,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 -- Tabela de Especialidades
 CREATE TABLE especialidades (
-    id_especialidade INT PRIMARY KEY AUTO_INCREMENT,
+    id_especialidade INT AUTO_INCREMENT PRIMARY KEY,
     nome_especialidade VARCHAR(100) NOT NULL UNIQUE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 -- Tabela de Abordagens Terapêuticas
 CREATE TABLE abordagens (
-    id_abordagem INT PRIMARY KEY AUTO_INCREMENT,
+    id_abordagem INT AUTO_INCREMENT PRIMARY KEY,
     nome_abordagem VARCHAR(100) NOT NULL UNIQUE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 -- Relacionamento entre Psicólogos e Especialidades (N:N)
-CREATE TABLE psicologo_especialidade (
+CREATE TABLE psicologos_especialidades (
     id_psicologo INT NOT NULL,
     id_especialidade INT NOT NULL,
     PRIMARY KEY (id_psicologo, id_especialidade),
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
     FOREIGN KEY (id_especialidade) REFERENCES especialidades(id_especialidade) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 -- Relacionamento entre Psicólogos e Abordagens (N:N)
-CREATE TABLE psicologo_abordagem (
+CREATE TABLE psicologos_abordagens (
     id_psicologo INT NOT NULL,
     id_abordagem INT NOT NULL,
     PRIMARY KEY (id_psicologo, id_abordagem),
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
     FOREIGN KEY (id_abordagem) REFERENCES abordagens(id_abordagem) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
-
+);
 
 
 -- ########## Tabelas Relacionadas aos Pacientes ##########
 
 -- Tabela de Pacientes
 CREATE TABLE pacientes (
-    id_paciente INT PRIMARY KEY AUTO_INCREMENT,
+    id_paciente INT AUTO_INCREMENT PRIMARY KEY,
     cpf VARCHAR(14) NOT NULL UNIQUE,
-    nome_paciente VARCHAR(100) NOT NULL,
-    email_paciente VARCHAR(100) NOT NULL UNIQUE,
-    bio_paciente VARCHAR(300),
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    foto VARCHAR(255) NOT NULL UNIQUE,
+    bio VARCHAR(300),
     contato VARCHAR(50) NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
-    beneficio_social ENUM('nenhum', 'estudante', 'cadunico') DEFAULT 'nenhum'
-) DEFAULT CHARACTER SET utf8mb4;
+    beneficio_social ENUM('nenhum', 'estudante', 'cadunico') NOT NULL DEFAULT 'nenhum'
+);
 
 -- Tabela de Endereços dos Pacientes
 CREATE TABLE enderecos_pacientes (
@@ -86,10 +93,10 @@ CREATE TABLE enderecos_pacientes (
     cidade VARCHAR(100) NOT NULL,
     estado VARCHAR(50) NOT NULL,
     cep VARCHAR(10) NOT NULL,
-    latitude DOUBLE NOT NULL,  
+    latitude DOUBLE NOT NULL,
     longitude DOUBLE NOT NULL,
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 -- Tabela de Preferências de Especialidades dos Pacientes
 CREATE TABLE preferencia_especialidades (
@@ -98,72 +105,76 @@ CREATE TABLE preferencia_especialidades (
     PRIMARY KEY (id_paciente, id_especialidade),
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE,
     FOREIGN KEY (id_especialidade) REFERENCES especialidades(id_especialidade) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 -- Tabela de Preferências de Abordagem dos Pacientes
-CREATE TABLE preferencia_abordagem (
+CREATE TABLE preferencia_abordagens (
     id_paciente INT NOT NULL,
     id_abordagem INT NOT NULL,
     PRIMARY KEY (id_paciente, id_abordagem),
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE,
     FOREIGN KEY (id_abordagem) REFERENCES abordagens(id_abordagem) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 
 -- ########## Tabelas de Relacionamento entre os Psicólogos e Pacientes ##########
 
 -- Tabela de Consultas
 CREATE TABLE consultas (
-    id_consulta INT PRIMARY KEY AUTO_INCREMENT,
+    id_consulta INT AUTO_INCREMENT PRIMARY KEY,
     id_psicologo INT NOT NULL,
     id_paciente INT NOT NULL,
     data_consulta DATETIME NOT NULL,
-    status_consulta ENUM('agendada', 'concluida', 'cancelada') DEFAULT 'agendada',
-    tipo_consulta ENUM('remota', 'presencial') NOT NULL,
-    valor_consulta DECIMAL(10,2) NOT NULL,
+    status ENUM('agendada', 'concluida', 'cancelada') NOT NULL DEFAULT 'agendada',
+    modalidade ENUM('remota', 'presencial') NOT NULL,
+    tipo ENUM('comum', 'social') NOT NULL,
+    valor DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
 -- Tabela de Avaliações
 CREATE TABLE avaliacoes (
-    id_avaliacao INT PRIMARY KEY AUTO_INCREMENT,
+    id_avaliacao INT AUTO_INCREMENT PRIMARY KEY,
     id_consulta INT UNIQUE NOT NULL,
     id_paciente INT NOT NULL,
     id_psicologo INT NOT NULL,
     nota INT CHECK (nota BETWEEN 1 AND 5),
     comentario TEXT,
-    data_avaliacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    data_avaliacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_consulta) REFERENCES consultas(id_consulta) ON DELETE CASCADE,
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE
-) DEFAULT CHARACTER SET utf8mb4;
+);
 
+-- ########## TRIGGER Valor Social ##########
 
--- Trigger para aplicar valor social automaticamente antes de inserir consulta
-DELIMITER $$
+DELIMITER //
 
-CREATE TRIGGER aplicar_valor_social
+CREATE TRIGGER trigger_aplicar_valor_social
 BEFORE INSERT ON consultas
 FOR EACH ROW
 BEGIN
-    DECLARE beneficio VARCHAR(10);
-    DECLARE aceita_social BOOLEAN;
+    DECLARE beneficio VARCHAR(20);
+    DECLARE aceita_beneficio BOOLEAN;
     DECLARE valor_base DECIMAL(10,2);
 
-    -- Buscar se o paciente tem benefício social
+    -- Obtendo informações do paciente e psicólogo
     SELECT beneficio_social INTO beneficio FROM pacientes WHERE id_paciente = NEW.id_paciente;
-
-    -- Buscar se o psicólogo aceita valor social e seu valor padrão
-    SELECT aceita_valor_social, valor_padrao_consulta INTO aceita_social, valor_base
+    SELECT aceita_beneficio, valor_consulta INTO aceita_beneficio, valor_base
     FROM psicologos WHERE id_psicologo = NEW.id_psicologo;
 
-    -- Aplicar valor social somente se o psicólogo aceitar e o paciente for elegível
-    IF beneficio IN ('estudante', 'cadunico') AND aceita_social = TRUE THEN
-        SET NEW.valor_consulta = 50.00;
+    -- Definir o valor da consulta com base no tipo
+    IF NEW.tipo = 'social' THEN
+        IF (beneficio = 'estudante' OR beneficio = 'cadunico') AND aceita_beneficio = TRUE THEN
+            SET NEW.valor = 50.00;
+        ELSE
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'A consulta foi marcada como social, mas o paciente não tem direito ou o psicólogo não aceita valor social';
+        END IF;
     ELSE
-        SET NEW.valor_consulta = valor_base;
+        SET NEW.valor = IFNULL(valor_base, NEW.valor);
     END IF;
-END $$
+END//
 
 DELIMITER ;

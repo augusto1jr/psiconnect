@@ -14,14 +14,15 @@ $$;
 CREATE TABLE psicologos (
     id_psicologo SERIAL PRIMARY KEY,
     crp VARCHAR(10) NOT NULL UNIQUE,
-    nome_psicologo VARCHAR(100) NOT NULL,
-    email_psicologo VARCHAR(100) NOT NULL UNIQUE,
-    bio_psicologo VARCHAR(300),
-    formacao_psicologo VARCHAR(300),
-    contato_psicologo VARCHAR(50) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+	foto VARCHAR(255) NOT NULL,
+    bio VARCHAR(300),
+    formacao VARCHAR(300),
+    contato VARCHAR(50) NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
-    valor_padrao_consulta DECIMAL(10,2) NOT NULL,
-    aceita_valor_social BOOLEAN DEFAULT FALSE,
+    valor_consulta DECIMAL(10,2) NOT NULL,
+    aceita_beneficio BOOLEAN DEFAULT FALSE,
     modalidade_atendimento TEXT NOT NULL CHECK (modalidade_atendimento IN ('remoto', 'presencial', 'hibrido')) DEFAULT 'remoto'
 );
 
@@ -77,10 +78,11 @@ CREATE TABLE psicologos_abordagens (
 CREATE TABLE pacientes (
     id_paciente SERIAL PRIMARY KEY,
     cpf VARCHAR(14) NOT NULL UNIQUE,
-    nome_paciente VARCHAR(100) NOT NULL,
-    email_paciente VARCHAR(100) NOT NULL UNIQUE,
-    bio_paciente VARCHAR(300),
-    contato_paciente VARCHAR(50) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+	foto VARCHAR(255) NOT NULL UNIQUE,
+    bio VARCHAR(300),
+    contato VARCHAR(50) NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
     beneficio_social TEXT NOT NULL CHECK (beneficio_social IN ('nenhum', 'estudante', 'cadunico')) DEFAULT 'nenhum'
 );
@@ -127,12 +129,14 @@ CREATE TABLE consultas (
     id_psicologo INT NOT NULL,
     id_paciente INT NOT NULL,
     data_consulta TIMESTAMP NOT NULL,
-    status_consulta TEXT NOT NULL CHECK (status_consulta IN ('agendada', 'concluida', 'cancelada')) DEFAULT 'agendada',
-    tipo_consulta TEXT NOT NULL CHECK (tipo_consulta IN ('remota', 'presencial')),
-    valor_consulta DECIMAL(10,2) NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('agendada', 'concluida', 'cancelada')) DEFAULT 'agendada',
+    modalidade TEXT NOT NULL CHECK (modalidade IN ('remota', 'presencial')),
+    tipo TEXT NOT NULL CHECK (tipo IN ('comum', 'social')),
+    valor DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE
 );
+
 
 -- Tabela de Avaliações
 CREATE TABLE avaliacoes (
@@ -148,31 +152,32 @@ CREATE TABLE avaliacoes (
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE
 );
 
+
+-- ########## TRIGGER Valor Social ##########
+
 -- Trigger para aplicar valor social automaticamente antes de inserir consulta
 CREATE OR REPLACE FUNCTION aplicar_valor_social()
 RETURNS TRIGGER AS $$
 DECLARE
     beneficio TEXT;
-    aceita_social BOOLEAN;
+    aceita_beneficio BOOLEAN;
     valor_base DECIMAL(10,2);
 BEGIN
-    -- Obtendo dados com segurança para evitar NULL
+    -- Obtendo informações do paciente e psicólogo
     SELECT beneficio_social INTO beneficio FROM pacientes WHERE id_paciente = NEW.id_paciente;
-    SELECT aceita_valor_social, valor_padrao_consulta INTO aceita_social, valor_base
-    FROM psicologos WHERE id_psicologo = NEW.id_psicologo;
+    SELECT aceita_beneficio, valor_consulta INTO aceita_beneficio, valor_base FROM psicologos WHERE id_psicologo = NEW.id_psicologo;
 
-    -- Aplicar desconto se o paciente tem benefício e o psicólogo aceita
-    IF beneficio IN ('estudante', 'cadunico') AND aceita_social = TRUE THEN
-        NEW.valor_consulta := 50.00;
+    -- Definir o valor da consulta com base no tipo
+    IF NEW.tipo = 'social' THEN
+        IF beneficio IN ('estudante', 'cadunico') AND aceita_beneficio = TRUE THEN
+            NEW.valor := 50.00; 
+        ELSE
+            RAISE EXCEPTION 'A consulta foi marcada como social, mas o paciente não tem direito ou o psicólogo não aceita valor social';
+        END IF;
     ELSE
-        NEW.valor_consulta := COALESCE(valor_base, NEW.valor_consulta);
+        NEW.valor := COALESCE(valor_base, NEW.valor);
     END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_aplicar_valor_social
-BEFORE INSERT ON consultas
-FOR EACH ROW
-EXECUTE FUNCTION aplicar_valor_social();
