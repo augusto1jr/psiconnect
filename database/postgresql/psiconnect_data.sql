@@ -11,6 +11,7 @@ INSERT INTO especialidades (nome_especialidade) VALUES
 ('Fobias'),
 ('Autoestima');
 
+
 -- Inserindo Abordagens
 INSERT INTO abordagens (nome_abordagem) VALUES
 ('Terapia Cognitivo Comportamental (TCC)'),
@@ -21,6 +22,7 @@ INSERT INTO abordagens (nome_abordagem) VALUES
 ('Humanismo'),
 ('Terapia Sistêmica'),
 ('Terapia Junguiana');
+
 
 -- Inserindo Psicólogos
 INSERT INTO psicologos (crp, nome, email, foto, bio, formacao, contato, senha_hash, valor_consulta, aceita_beneficio, modalidade_atendimento) VALUES
@@ -34,6 +36,15 @@ INSERT INTO enderecos_psicologos (id_psicologo, rua, numero, complemento, bairro
 (2, 'Rua do Sol', '789', 'Conjunto 10', 'Jardins', 'Belo Horizonte', 'MG', '30100-000', -19.9208, -43.9378),
 (3, 'Avenida Principal', '456', NULL, 'Bela Vista', 'Rio de Janeiro', 'RJ', '22000-000', -22.9068, -43.1729);
 
+-- Inserindo Relacionamento entre Psicólogos e Especialidades
+INSERT INTO psicologos_especialidades (id_psicologo, id_especialidade) VALUES
+(1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6);
+
+-- Inserindo Relacionamento entre Psicólogos e Abordagens
+INSERT INTO psicologos_abordagens (id_psicologo, id_abordagem) VALUES
+(1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6);
+
+
 -- Inserindo Pacientes
 INSERT INTO pacientes (cpf, nome, email, foto, bio, contato, senha_hash, beneficio_social) VALUES
 ('123.456.789-00', 'Ana Oliveira', 'ana.oliveira@email.com', 'https://drive.google.com/file/d/1aQejZLGgqP6nTt7cqrUOyyBLGWTFwHqV/view?usp=drive_link', 'Paciente com histórico de ansiedade.', '(11) 99999-5555', 'senha_hash4', 'estudante'),
@@ -46,15 +57,16 @@ INSERT INTO enderecos_pacientes (id_paciente, rua, numero, complemento, bairro, 
 (2, 'Avenida Brasil', '200', NULL, 'Copacabana', 'Rio de Janeiro', 'RJ', '22200-000', -22.9707, -43.1823),
 (3, 'Rua das Palmeiras', '300', 'Casa 5', 'Savassi', 'Belo Horizonte', 'MG', '30140-000', -19.937, -43.9392);
 
--- Inserindo Relacionamento entre Psicólogos e Especialidades
-INSERT INTO psicologos_especialidades (id_psicologo, id_especialidade) VALUES
-(1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6);
+-- Inserindo Relacionamento entre Pacientes e Especialidades
+INSERT INTO preferencia_especialidades (id_paciente, id_especialidade) VALUES
+(1, 1), (1, 3), (2, 2), (2, 4), (3, 5), (3, 6);
 
--- Inserindo Relacionamento entre Psicólogos e Abordagens
-INSERT INTO psicologos_abordagens (id_psicologo, id_abordagem) VALUES
-(1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6);
+-- Inserindo Relacionamento entre Pacientes e Abordagens
+INSERT INTO preferencia_abordagens (id_paciente, id_abordagem) VALUES
+(1, 1), (1, 4), (2, 2), (2, 3), (3, 5), (3, 6);
 
--- Inserindo Consultas com os novos campos
+
+-- Inserindo Consultas
 INSERT INTO consultas (id_psicologo, id_paciente, data_consulta, status, modalidade, tipo, valor) VALUES
 (1, 1, '2025-03-20 14:00:00', 'agendada', 'remota', 'social', 50.00),
 (2, 2, '2025-03-21 15:30:00', 'agendada', 'remota', 'comum', 180.00),
