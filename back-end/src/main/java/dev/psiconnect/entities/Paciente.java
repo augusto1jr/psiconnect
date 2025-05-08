@@ -44,9 +44,9 @@ public class Paciente {
     private BeneficioSocial beneficioSocial;
 
     public enum BeneficioSocial {
-        nenhum,
-        estudante,
-        cadunico;
+        NENHUM,
+        ESTUDANTE,
+        CADUNICO;
     }
 
     @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)

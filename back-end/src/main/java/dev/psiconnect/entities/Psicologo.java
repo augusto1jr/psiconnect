@@ -53,9 +53,9 @@ public class Psicologo {
     private ModalidadeAtendimento modalidadeAtendimento;
 
     public enum ModalidadeAtendimento {
-        remoto,
-        presencial,
-        hibrido;
+        REMOTO,
+        PRESENCIAL,
+        HIBRIDO;
     }
 
     @OneToOne(mappedBy = "psicologo", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -23,7 +23,7 @@ CREATE TABLE psicologos (
     senha_hash VARCHAR(255) NOT NULL,
     valor_consulta DECIMAL(10,2) NOT NULL,
     aceita_beneficio BOOLEAN DEFAULT FALSE,
-    modalidade_atendimento TEXT NOT NULL CHECK (modalidade_atendimento IN ('remoto', 'presencial', 'hibrido')) DEFAULT 'remoto'
+    modalidade_atendimento TEXT NOT NULL CHECK (modalidade_atendimento IN ('REMOTO', 'PRESENCIAL', 'HIBRIDO')) DEFAULT 'REMOTO'
 );
 
 -- Tabela de Endereços dos Psicólogos
@@ -84,7 +84,7 @@ CREATE TABLE pacientes (
     bio VARCHAR(300),
     contato VARCHAR(50) NOT NULL,
     senha_hash VARCHAR(255) NOT NULL,
-    beneficio_social TEXT NOT NULL CHECK (beneficio_social IN ('nenhum', 'estudante', 'cadunico')) DEFAULT 'nenhum'
+    beneficio_social TEXT NOT NULL CHECK (beneficio_social IN ('NENHUM', 'ESTUDANTE', 'CADUNICO')) DEFAULT 'NENHUM'
 );
 
 -- Tabela de Endereços dos Pacientes
@@ -129,9 +129,9 @@ CREATE TABLE consultas (
     id_psicologo INT NOT NULL,
     id_paciente INT NOT NULL,
     data_consulta TIMESTAMP NOT NULL,
-    status TEXT NOT NULL CHECK (status IN ('agendada', 'concluida', 'cancelada')) DEFAULT 'agendada',
-    modalidade TEXT NOT NULL CHECK (modalidade IN ('remota', 'presencial')),
-    tipo TEXT NOT NULL CHECK (tipo IN ('comum', 'social')),
+    status TEXT NOT NULL CHECK (status IN ('AGENDADA', 'CONCLUIDA', 'CANCELADA')) DEFAULT 'AGENDADA',
+    modalidade TEXT NOT NULL CHECK (modalidade IN ('REMOTA', 'PRESENCIAL')),
+    tipo TEXT NOT NULL CHECK (tipo IN ('COMUM', 'SOCIAL')),
     valor DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (id_psicologo) REFERENCES psicologos(id_psicologo) ON DELETE CASCADE,
     FOREIGN KEY (id_paciente) REFERENCES pacientes(id_paciente) ON DELETE CASCADE
@@ -169,7 +169,7 @@ BEGIN
 
     -- Definir o valor da consulta com base no tipo
     IF NEW.tipo = 'social' THEN
-        IF beneficio IN ('estudante', 'cadunico') AND aceita_beneficio = TRUE THEN
+        IF beneficio IN ('ESTUDANTE', 'CADUNICO') AND aceita_beneficio = TRUE THEN
             NEW.valor := 50.00; 
         ELSE
             RAISE EXCEPTION 'A consulta foi marcada como social, mas o paciente não tem direito ou o psicólogo não aceita valor social';

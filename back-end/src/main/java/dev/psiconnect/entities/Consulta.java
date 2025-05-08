@@ -33,12 +33,12 @@ public class Consulta {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status = Status.agendada;
+    private Status status = Status.AGENDADA;
 
     public enum Status {
-        agendada,
-        concluida,
-        cancelada
+        AGENDADA,
+        CONCLUIDA,
+        CANCELADA
     }
 
     @Enumerated(EnumType.STRING)
@@ -46,8 +46,8 @@ public class Consulta {
     private Modalidade modalidade;
 
     public enum Modalidade {
-        remota,
-        presencial
+        REMOTA,
+        PRESENCIAL
     }
 
     @Enumerated(EnumType.STRING)
@@ -55,8 +55,8 @@ public class Consulta {
     private Tipo tipo;
 
     public enum Tipo {
-        comum,
-        social
+        COMUM,
+        SOCIAL
     }
 
     @Column(nullable = false)

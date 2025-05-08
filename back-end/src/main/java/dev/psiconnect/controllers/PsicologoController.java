@@ -1,16 +1,13 @@
 package dev.psiconnect.controllers;
 
 import dev.psiconnect.dtos.requests.PsicologoRequestDTO;
-import dev.psiconnect.dtos.requests.EnderecoPsiRequestDTO;
 import dev.psiconnect.dtos.responses.PsicologoResponseDTO;
-import dev.psiconnect.entities.Abordagem;
-import dev.psiconnect.entities.EnderecoPsicologo;
-import dev.psiconnect.entities.Psicologo;
-import dev.psiconnect.entities.Especialidade;
-import dev.psiconnect.repositories.EnderecoPsiRepository;
-import dev.psiconnect.repositories.PsicologoRepository;
-import dev.psiconnect.repositories.EspecialidadeRepository;
-import dev.psiconnect.repositories.AbordagemRepository;
+import dev.psiconnect.dtos.requests.EnderecoPsiRequestDTO;
+import dev.psiconnect.dtos.responses.ConsultaResponseDTO;
+import dev.psiconnect.dtos.responses.AvaliacaoResponseDTO;
+
+import dev.psiconnect.entities.*;
+import dev.psiconnect.repositories.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +32,12 @@ public class PsicologoController {
 
     @Autowired
     private AbordagemRepository abordagemRepository;
+
+    @Autowired
+    private ConsultaRepository consultaRepository;
+
+    @Autowired
+    private AvaliacaoRepository avaliacaoRepository;
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
@@ -123,5 +126,45 @@ public class PsicologoController {
                     return ResponseEntity.ok(new PsicologoResponseDTO(psicologo));
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/{id}/consultas")
+    public ResponseEntity<List<ConsultaResponseDTO>> getConsultasByPsicologo(
+            @PathVariable Long id,
+            @RequestParam(required = false) Consulta.Status status
+    ) {
+        List<Consulta> consultas;
+
+        if (status == null) {
+            consultas = consultaRepository.findByPsicologoId(id);
+
+        } else {
+            consultas = consultaRepository.findByPsicologoIdAndStatus(id, status);
+        }
+
+        List<ConsultaResponseDTO> response = consultas.stream()
+                .map(ConsultaResponseDTO::new)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
+
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/{id}/avaliacoes")
+    public ResponseEntity<List<AvaliacaoResponseDTO>> getAvaliacoesByPsicologo(@PathVariable Long id) {
+        if (!psicologoRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Avaliacao> avaliacoes = avaliacaoRepository.findByPsicologoId(id);
+        List<AvaliacaoResponseDTO> response = avaliacoes.stream()
+                .map(AvaliacaoResponseDTO::new)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 }
