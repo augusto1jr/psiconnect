@@ -87,6 +87,17 @@ public class PsicologoController {
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/recomendados")
+    public ResponseEntity<List<PsicologoResponseDTO>> getPsicologosRecomendados() {
+        List<Psicologo> recomendados = psicologoRepository.findTopRecomendados();
+        List<PsicologoResponseDTO> response = recomendados.stream()
+                .map(PsicologoResponseDTO::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deletePsicologo(@PathVariable Long id) {
@@ -139,7 +150,6 @@ public class PsicologoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}/consultas")
     public ResponseEntity<List<ConsultaResponseDTO>> getConsultasByPsicologo(
@@ -161,8 +171,6 @@ public class PsicologoController {
 
         return ResponseEntity.ok(response);
     }
-
-
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}/avaliacoes")
