@@ -40,7 +40,7 @@ public class PsicologoController {
     private AvaliacaoRepository avaliacaoRepository;
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping
+    @PostMapping("/cadastro")
     @Transactional
     public void savePsicologo(@RequestBody PsicologoRequestDTO data) {
         List<Especialidade> especialidades = especialidadeRepository.findAllById(data.especialidades());
@@ -58,6 +58,17 @@ public class PsicologoController {
         psicologoRepository.save(psicologo);
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping("/login")
+    public ResponseEntity<String> loginPsicologo(@RequestBody Psicologo loginData) {
+        Psicologo psicologo = psicologoRepository.findByEmail(loginData.getEmail());
+
+        if (psicologo != null && psicologo.getSenhaHash().equals(loginData.getSenhaHash())) {
+            return ResponseEntity.ok("Login realizado com sucesso!");
+        } else {
+            return ResponseEntity.status(401).body("E-mail ou senha inválidos.");
+        }
+    }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping

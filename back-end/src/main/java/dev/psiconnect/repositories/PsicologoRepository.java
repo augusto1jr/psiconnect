@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PsicologoRepository extends JpaRepository<Psicologo, Long> {
+    Psicologo findByEmail(String email);
 }

@@ -34,7 +34,7 @@ public class PacienteController {
     private AbordagemRepository abordagemRepository;
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping
+    @PostMapping("/cadastro")
     @Transactional
     public void savePaciente(@RequestBody PacienteRequestDTO data) {
         List<Especialidade> prefEspecialidades = especialidadeRepository.findAllById(data.prefEspecialidades());
@@ -50,6 +50,18 @@ public class PacienteController {
         }
 
         pacienteRepository.save(paciente);
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping("/login")
+    public ResponseEntity<String> loginPaciente(@RequestBody Paciente loginData) {
+        Paciente paciente = pacienteRepository.findByEmail(loginData.getEmail());
+
+        if (paciente != null && paciente.getSenhaHash().equals(loginData.getSenhaHash())) {
+            return ResponseEntity.ok("Login realizado com sucesso!");
+        } else {
+            return ResponseEntity.status(401).body("E-mail ou senha inválidos.");
+        }
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
