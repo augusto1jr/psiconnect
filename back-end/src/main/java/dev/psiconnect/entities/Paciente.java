@@ -37,7 +37,7 @@ public class Paciente {
     private String contato;
 
     @Column(name = "senha_hash", nullable = false)
-    private String senhaHash;
+    private String senha;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "beneficio_social", nullable = false)
@@ -75,7 +75,7 @@ public class Paciente {
         this.foto = data.foto();
         this.bio = data.bio();
         this.contato = data.contato();
-        this.senhaHash = data.senhaHash();
+        this.senha = data.senha();
         this.beneficioSocial = data.beneficioSocial();
 
         if (data.endereco() != null) {

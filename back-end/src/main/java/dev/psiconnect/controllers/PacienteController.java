@@ -3,7 +3,6 @@ package dev.psiconnect.controllers;
 import dev.psiconnect.dtos.requests.EnderecoPacRequestDTO;
 import dev.psiconnect.dtos.requests.PacienteRequestDTO;
 import dev.psiconnect.dtos.responses.PacienteResponseDTO;
-import dev.psiconnect.dtos.responses.PsicologoResponseDTO;
 import dev.psiconnect.entities.*;
 import dev.psiconnect.repositories.AbordagemRepository;
 import dev.psiconnect.repositories.EnderecoPacRepository;
@@ -57,7 +56,7 @@ public class PacienteController {
     public ResponseEntity<String> loginPaciente(@RequestBody Paciente loginData) {
         Paciente paciente = pacienteRepository.findByEmail(loginData.getEmail());
 
-        if (paciente != null && paciente.getSenhaHash().equals(loginData.getSenhaHash())) {
+        if (paciente != null && paciente.getSenha().equals(loginData.getSenha())) {
             return ResponseEntity.ok("Login realizado com sucesso!");
         } else {
             return ResponseEntity.status(401).body("E-mail ou senha inválidos.");
@@ -103,7 +102,7 @@ public class PacienteController {
                     paciente.setEmail(data.email());
                     paciente.setBio(data.bio());
                     paciente.setContato(data.contato());
-                    paciente.setSenhaHash(data.senhaHash());
+                    paciente.setSenha(data.senha());
                     paciente.setBeneficioSocial(data.beneficioSocial());
 
                     if (paciente.getEndereco() != null) {

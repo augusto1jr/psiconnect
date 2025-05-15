@@ -10,7 +10,7 @@ public record PacienteRequestDTO(
         String foto,
         String bio,
         String contato,
-        String senhaHash,
+        String senha,
         BeneficioSocial beneficioSocial,
         EnderecoPacRequestDTO endereco,
         List<Long> prefEspecialidades,

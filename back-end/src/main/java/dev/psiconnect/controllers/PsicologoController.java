@@ -63,7 +63,7 @@ public class PsicologoController {
     public ResponseEntity<String> loginPsicologo(@RequestBody Psicologo loginData) {
         Psicologo psicologo = psicologoRepository.findByEmail(loginData.getEmail());
 
-        if (psicologo != null && psicologo.getSenhaHash().equals(loginData.getSenhaHash())) {
+        if (psicologo != null && psicologo.getSenha().equals(loginData.getSenha())) {
             return ResponseEntity.ok("Login realizado com sucesso!");
         } else {
             return ResponseEntity.status(401).body("E-mail ou senha inválidos.");
@@ -121,7 +121,7 @@ public class PsicologoController {
                     psicologo.setBio(data.bio());
                     psicologo.setFormacao(data.formacao());
                     psicologo.setContato(data.contato());
-                    psicologo.setSenhaHash(data.senhaHash());
+                    psicologo.setSenha(data.senha());
                     psicologo.setValorConsulta(data.valorConsulta());
                     psicologo.setAceitaBeneficio(data.aceitaBeneficio());
                     psicologo.setModalidadeAtendimento(data.modalidadeAtendimento());

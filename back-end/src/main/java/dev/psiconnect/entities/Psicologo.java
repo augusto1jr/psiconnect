@@ -40,7 +40,7 @@ public class Psicologo {
     private String contato;
 
     @Column(name = "senha_hash", nullable = false)
-    private String senhaHash;
+    private String senha;
 
     @Column(name = "valor_consulta", nullable = false)
     private Double valorConsulta;
@@ -86,7 +86,7 @@ public class Psicologo {
         this.bio = data.bio();
         this.formacao = data.formacao();
         this.contato = data.contato();
-        this.senhaHash = data.senhaHash();
+        this.senha = data.senha();
         this.valorConsulta = data.valorConsulta();
         this.aceitaBeneficio = data.aceitaBeneficio();
         this.modalidadeAtendimento = data.modalidadeAtendimento();

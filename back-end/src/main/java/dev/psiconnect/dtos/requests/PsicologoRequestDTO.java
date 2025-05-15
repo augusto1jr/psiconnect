@@ -11,7 +11,7 @@ public record PsicologoRequestDTO(
         String bio,
         String formacao,
         String contato,
-        String senhaHash,
+        String senha,
         Double valorConsulta,
         Boolean aceitaBeneficio,
         ModalidadeAtendimento modalidadeAtendimento,
