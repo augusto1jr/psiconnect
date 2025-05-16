@@ -1,0 +1,197 @@
+@charset "UTF-8";
+
+/* Versão Mobile First */
+.main {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logoImage {
+  margin-top: 17px;
+  width: 35px;
+  height: 35px;
+}
+
+.login {
+  background-color: var(--cor1);
+  display: inline-block;
+  align-items: center;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.img {
+  background-image: url(../../../public/consultorio.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right top;
+  display: block;
+  height: 200px;
+  margin: -20px;
+}
+
+.title {
+  text-align: center;
+  padding-bottom: 20px;
+  padding-top: 40px;
+  font-weight: 700;
+  color: var(--cor2);
+}
+
+.iconPerson {
+  transform: translateY(4px);
+}
+
+.iconLock {
+  transform: translateY(3px);
+}
+
+.form {
+  display: block;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--cor1);
+  border-radius: 6px;
+  color: var(--cor4);
+  font-size: 14px;
+}
+
+.input:focus {
+  border: 2px solid var(--cor2);
+  outline: none;
+}
+
+/* Botões base */
+.buttonBase {
+  all: unset;
+  border: 1px solid var(--cor3);
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Estilização base para botões de login e cadastro */
+.btn_login button,
+.btn_cadastro button {
+  display: inline-block;
+  width: 200px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Containers para centralizar os botões */
+.btn_login,
+.btn_cadastro {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Estilo do botão de login */
+.btn_login button {
+  background-color: var(--cor3);
+  color: white;
+}
+
+/* Estilo do botão de cadastro */
+.btn_cadastro button {
+  background-color: var(--cor2);
+  color: white;
+}
+
+/* Hover: login */
+.btn_login button:hover {
+  border: 2px solid var(--cor4);
+}
+
+/* Hover: cadastro */
+.btn_cadastro button:hover {
+  border: 2px solid var(--cor3);
+}
+
+/* Recuperar senha */
+.btn_forgot {
+  display: flex;
+  justify-content: center;
+  margin-top: -5px;
+}
+
+.btn_forgot a {
+  display: inline-block;
+  margin-top: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--cor4);
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.btn_forgot a:hover {
+  text-decoration: underline;
+  color: var(--cor2);
+}
+
+
+/* Botão Voltar */
+.btn_voltar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  transition: color 0.3s ease;
+}
+
+.btn_voltar button {
+  background-color: transparent;
+  border: none;
+  color: var(--cor3);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.btn_voltar button:hover {
+  color: var(--cor2); /* efeito hover */
+}
+
+/* Media Queries */
+@media screen and (min-width: 768px) {
+    .login {
+        width: 80vw;
+        max-width: 600px;
+        display: flex;
+    }
+
+    .img {
+        background-size: cover;
+        background-position: left bottom;
+        width: 30vw;
+        height: 50vh;
+    }
+
+    .form {
+        width: 70vw;
+        padding-left: 40px;
+    }
+}

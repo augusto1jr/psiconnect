@@ -7,7 +7,7 @@ export default function Home() {
     <main className={styles.homeContainer}>
       <section className={`${styles.homeSection} ${styles.paciente}`}>
         <p>Cuidar da sua saúde mental é investir em qualidade de vida!</p>
-        <Link href="/pacientes/login">
+        <Link href="/paciente/login">
           <button type="button" className={styles.loginButton}>Seja um Paciente</button>
         </Link>
       </section>
@@ -18,7 +18,7 @@ export default function Home() {
 
       <section className={`${styles.homeSection} ${styles.psicologo}`}>
         <p>Ao trabalhar conosco você consegue atender novos pacientes de onde estiver!</p>
-        <Link href="/psicologos/login">
+        <Link href="/psicologo/login">
           <button type="button" className={styles.loginButton}>Seja um Psicólogo</button>
         </Link>
       </section>

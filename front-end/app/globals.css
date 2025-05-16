@@ -4,10 +4,11 @@
 
 /* Variáveis globais */
 :root {
-    --cor0: #E4CCFF40;
+    --cor0: #e4ccff5b;
     --cor1: #E4CCFF;
     --cor2: #9747FF;
     --cor3: #801EFF;
+    --cor4: #5000b8;
 
     --fonte-padrao: "Poppins", Arial, Verdana, Helvetica, sans-serif;
 }
@@ -22,7 +23,7 @@
 
 /* Estilo Padrão */
 body {
-    background-color: #fff;
+    background-color: var(--cor0);
     color: #000;
     font-size: 16px;
     line-height: 1.5;
@@ -48,4 +49,32 @@ html {
 body {
     min-height: 100%;
     width: 100%;
+}
+
+/* Icons */
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 16px;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* Media Queries */
+@media screen and (min-width: 768px) {
+  html,
+  body {
+    background-image: linear-gradient(to bottom, var(--cor0), var(--cor3));
+}
 }
