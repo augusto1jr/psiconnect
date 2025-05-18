@@ -1,5 +1,5 @@
 'use client';
-import styles from './page.module.css';
+import styles from '@/styles/login.module.css';
 import Link from "next/link";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -42,12 +42,11 @@ export default function Login() {
   return (
     <main className={styles.main}>
       <section className={styles.login}>
-        <div className={styles.img}></div>
+        <div className={styles.img}>{/* Imagem aplicada via CSS */}</div>
         <div className={styles.form}>
         <div className={styles.logoContainer}>
         <img src="/psiconnect-logo.png" alt="Logo PsiConnect" className={styles.logoImage} />
-        <h1 className={styles.title}>PsiConnect</h1>
-        </div>
+        <h1 className={styles.title}>PsiConnect</h1></div>
           <form onSubmit={handleLogin} autoComplete="on">
             {/* Campo de Email */}
             <div className={styles.formGroup}>
@@ -100,7 +99,7 @@ export default function Login() {
       </section>
         {/* Botão de Voltar */}
         <div className={styles.btn_voltar}>
-            <button onClick={() => router.back()}><span className="material-symbols-outlined">arrow_back</span> Voltar</button>
+            <button onClick={() => router.push('/')}><span className="material-symbols-outlined">arrow_back</span> Voltar</button>
         </div>
     </main>
   );

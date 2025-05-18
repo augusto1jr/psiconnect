@@ -63,4 +63,5 @@
 
 .psicologo .loginButton:hover {
   background-color: var(--cor1);
+  color: var(--cor4);
 }
