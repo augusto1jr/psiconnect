@@ -1,0 +1,49 @@
+/* Mudanças nas telas de Login e Cadastro de Psicólogos */
+@charset "UTF-8";
+
+.login {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.form {
+  flex: 2;
+  padding-right: 60px;
+}
+
+.img {
+  background-image: url('/paciente.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right top;
+  display: block;
+  height: 450px;
+  width: 150px;
+  margin: -20px;
+}
+
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+  }
+
+  .img {
+    width: 300px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .form {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+
