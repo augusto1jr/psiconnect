@@ -32,6 +32,28 @@ public class PacienteController {
     @Autowired
     private AbordagemRepository abordagemRepository;
 
+    /* ENDPOINT CADASTRO SIMPLIFICADO */
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping("/cadastro")
+    @Transactional
+    public void savePaciente(@RequestBody PacienteRequestDTO data) {
+        Paciente paciente = new Paciente();
+        paciente.setEmail(data.email());
+        paciente.setSenha(data.senha());
+
+        // Valores genéricos obrigatórios
+        paciente.setNome("Paciente Teste");
+        paciente.setCpf("000.000.000-00"); // CPF mockado
+        paciente.setFoto("https://via.placeholder.com/150"); // URL padrão de imagem
+        paciente.setBio("Teste");
+        paciente.setContato("000000000"); // Telefone fictício
+        paciente.setBeneficioSocial(Paciente.BeneficioSocial.NENHUM); // Enum padrão
+
+        pacienteRepository.save(paciente);
+    }
+
+
+    /* ENDPOINT CADASTRO COMPLETO
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/cadastro")
     @Transactional
@@ -50,6 +72,7 @@ public class PacienteController {
 
         pacienteRepository.save(paciente);
     }
+    */
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/login")
