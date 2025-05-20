@@ -25,7 +25,7 @@ export default function Login() {
       if (response.ok) {
         const resposta = await response.text();
         if (resposta.includes("sucesso")) {
-          window.alert("Login realizado com sucesso!");
+          router.push('/paciente/home');
         } else {
           window.alert("Email ou senha incorretos");
         }
