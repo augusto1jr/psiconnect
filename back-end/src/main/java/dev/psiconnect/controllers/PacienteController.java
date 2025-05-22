@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,20 +36,28 @@ public class PacienteController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/cadastro")
     @Transactional
-    public void savePaciente(@RequestBody PacienteRequestDTO data) {
+    public ResponseEntity<?> savePaciente(@RequestBody PacienteRequestDTO data) {
         Paciente paciente = new Paciente();
         paciente.setEmail(data.email());
         paciente.setSenha(data.senha());
 
         // Valores genéricos obrigatórios
         paciente.setNome("Paciente Teste");
-        paciente.setCpf("000.000.000-00"); // CPF mockado
-        paciente.setFoto("https://via.placeholder.com/150"); // URL padrão de imagem
+        paciente.setCpf("000.000.000-" + new Random().nextInt(900) + 100); // evita CPFs tipo ...-1 ou ...-0
+        paciente.setFoto("https://i.pravatar.cc/150?u=" + UUID.randomUUID());
         paciente.setBio("Teste");
-        paciente.setContato("000000000"); // Telefone fictício
-        paciente.setBeneficioSocial(Paciente.BeneficioSocial.NENHUM); // Enum padrão
+        paciente.setContato("000000000");
+        paciente.setBeneficioSocial(Paciente.BeneficioSocial.NENHUM);
 
         pacienteRepository.save(paciente);
+
+        // Retorna o JSON
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("mensagem", "Cadastro realizado com sucesso!");
+        resposta.put("id", paciente.getId());
+        resposta.put("nome", paciente.getNome());
+
+        return ResponseEntity.ok(resposta);
     }
 
 
@@ -57,7 +65,7 @@ public class PacienteController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/cadastro")
     @Transactional
-    public void savePaciente(@RequestBody PacienteRequestDTO data) {
+    public ResponseEntity<?> savePaciente(@RequestBody PacienteRequestDTO data) {
         List<Especialidade> prefEspecialidades = especialidadeRepository.findAllById(data.prefEspecialidades());
         List<Abordagem> prefAbordagens = abordagemRepository.findAllById(data.prefAbordagens());
 
@@ -71,20 +79,37 @@ public class PacienteController {
         }
 
         pacienteRepository.save(paciente);
+
+        // Retorna o JSON
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("mensagem", "Cadastro realizado com sucesso!");
+        resposta.put("id", paciente.getId());
+        resposta.put("nome", paciente.getNome());
+
+        return ResponseEntity.ok(resposta);
     }
     */
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/login")
-    public ResponseEntity<String> loginPaciente(@RequestBody Paciente loginData) {
+    public ResponseEntity<?> loginPaciente(@RequestBody Paciente loginData) {
         Paciente paciente = pacienteRepository.findByEmail(loginData.getEmail());
 
         if (paciente != null && paciente.getSenha().equals(loginData.getSenha())) {
-            return ResponseEntity.ok("Login realizado com sucesso!");
+            // Monta a resposta com os dados essenciais do paciente
+            Map<String, Object> resposta = new HashMap<>();
+            resposta.put("mensagem", "Login realizado com sucesso!");
+            resposta.put("id", paciente.getId());
+            resposta.put("nome", paciente.getNome());
+
+            return ResponseEntity.ok(resposta);
         } else {
-            return ResponseEntity.status(401).body("E-mail ou senha inválidos.");
+            Map<String, String> erro = new HashMap<>();
+            erro.put("mensagem", "E-mail ou senha inválidos.");
+            return ResponseEntity.status(401).body(erro);
         }
     }
+
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping

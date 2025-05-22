@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,10 +39,41 @@ public class PsicologoController {
     @Autowired
     private AvaliacaoRepository avaliacaoRepository;
 
+    /* ENDPOINT CADASTRO SIMPLIFICADO */
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/cadastro")
     @Transactional
-    public void savePsicologo(@RequestBody PsicologoRequestDTO data) {
+    public ResponseEntity<?> savePsicologo(@RequestBody PsicologoRequestDTO data) {
+        Psicologo psicologo = new Psicologo();
+        psicologo.setEmail(data.email());
+        psicologo.setSenha(data.senha());
+
+        // Valores genéricos obrigatórios
+        psicologo.setNome("Psicólogo Teste");
+        psicologo.setCrp("00/00000-" + (new Random().nextInt(900) + 100)); // gera um CRP aleatório básico
+        psicologo.setFoto("https://i.pravatar.cc/150?u=" + UUID.randomUUID());
+        psicologo.setBio("Teste");
+        psicologo.setContato("000000000");
+        psicologo.setValorConsulta(100.0);
+        psicologo.setAceitaBeneficio(false);
+        psicologo.setModalidadeAtendimento(Psicologo.ModalidadeAtendimento.REMOTO); // Enum padrão
+
+        psicologoRepository.save(psicologo);
+
+        // Retorna o JSON
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("mensagem", "Cadastro realizado com sucesso!");
+        resposta.put("id", psicologo.getId());
+        resposta.put("nome", psicologo.getNome());
+
+        return ResponseEntity.ok(resposta);
+    }
+
+    /* ENDPOINT CADASTRO COMPLETO
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping("/cadastro")
+    @Transactional
+    public ResponseEntity<?> savePsicologo(@RequestBody PsicologoRequestDTO data) {
         List<Especialidade> especialidades = especialidadeRepository.findAllById(data.especialidades());
         List<Abordagem> abordagens = abordagemRepository.findAllById(data.abordagens());
 
@@ -56,17 +87,33 @@ public class PsicologoController {
         }
 
         psicologoRepository.save(psicologo);
+
+        // Resposta padrão
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("mensagem", "Cadastro realizado com sucesso!");
+        resposta.put("id", psicologo.getId());
+        resposta.put("nome", psicologo.getNome());
+
+        return ResponseEntity.ok(resposta);
     }
+    */
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/login")
-    public ResponseEntity<String> loginPsicologo(@RequestBody Psicologo loginData) {
+    public ResponseEntity<?> loginPsicologo(@RequestBody Psicologo loginData) {
         Psicologo psicologo = psicologoRepository.findByEmail(loginData.getEmail());
 
         if (psicologo != null && psicologo.getSenha().equals(loginData.getSenha())) {
-            return ResponseEntity.ok("Login realizado com sucesso!");
+            Map<String, Object> resposta = new HashMap<>();
+            resposta.put("mensagem", "Login realizado com sucesso!");
+            resposta.put("id", psicologo.getId());
+            resposta.put("nome", psicologo.getNome());
+
+            return ResponseEntity.ok(resposta);
         } else {
-            return ResponseEntity.status(401).body("E-mail ou senha inválidos.");
+            Map<String, String> erro = new HashMap<>();
+            erro.put("mensagem", "E-mail ou senha inválidos.");
+            return ResponseEntity.status(401).body(erro);
         }
     }
 
