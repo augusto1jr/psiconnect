@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function Cadastro() {
+export default function CadastroPsicologo() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -23,11 +23,17 @@ export default function Cadastro() {
       });
 
       if (response.ok) {
-        window.alert('Usuário cadastrado com sucesso!');
-        console.log('Usuário cadastrado com sucesso!');
+        const resposta = await response.json();
+        window.alert(resposta.mensagem || 'Cadastro realizado com sucesso!');
+
+        localStorage.setItem('psicologoId', resposta.id);
+        localStorage.setItem('psicologoNome', resposta.nome);
+
+        //router.push('/psicologo/home');
       } else {
-        window.alert('Erro ao cadastrar usuário');
-        console.error('Erro ao cadastrar usuário');
+        const textoErro = await response.text(); // Só é chamado uma vez
+        console.error("Erro:", textoErro);
+        alert("Erro ao cadastrar: " + textoErro);
       }
     } catch (error) {
       window.alert('Erro na requisição');

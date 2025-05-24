@@ -22,12 +22,18 @@ export default function Cadastro() {
       });
 
       if (response.ok) {
-        window.alert('Usuário cadastrado com sucesso!');
-        console.log('Usuário cadastrado com sucesso!');
-      } else {
-        window.alert('Erro ao cadastrar usuário');
-        console.error('Erro ao cadastrar usuário');
-      }
+        const resposta = await response.json();
+        window.alert(resposta.mensagem || 'Cadastro realizado com sucesso!');
+
+        localStorage.setItem('pacienteId', resposta.id);
+        localStorage.setItem('pacienteNome', resposta.nome);
+
+        router.push('/paciente/home');
+        } else {
+          const textoErro = await response.text();
+          console.error("Erro:", textoErro);
+          alert("Erro ao cadastrar: " + textoErro);
+        }
     } catch (error) {
       window.alert('Erro na requisição');
       console.error('Erro na requisição:', error);

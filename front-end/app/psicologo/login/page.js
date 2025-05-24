@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 
-export default function Login() {
+export default function LoginPsicologo() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -20,19 +20,19 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, senha}),
+        body: JSON.stringify({ email, senha }),
       });
 
+      const resposta = await response.json();
+
       if (response.ok) {
-        const resposta = await response.text();
-        if (resposta.includes("sucesso")) {
-          window.alert("Login realizado com sucesso!");
-        } else {
-          window.alert("Email ou senha incorretos");
-        }
+        localStorage.setItem('psicologoId', resposta.id);
+        localStorage.setItem('psicologoNome', resposta.nome);
+
+        window.alert('Login realizado com sucesso!');
+        /*router.push('/psicologo/home');*/
       } else {
-        window.alert('Usuário ou senha incorretos');
-        console.error('Falha no login');
+        window.alert(resposta.mensagem || 'E-mail ou senha inválidos.');
       }
     } catch (error) {
       window.alert('Erro na requisição');
