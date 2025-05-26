@@ -46,6 +46,59 @@
   color: #000;
 }
 
+.psicologoList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.psicologoCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.psicologoCard:last-child {
+  border-bottom: none;
+}
+
+.psicologoFoto {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.psicologoInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.psicologoBio {
+  color: #666;
+  margin: 4px 0;
+}
+
+.psicologoValor {
+  color: var(--cor3);
+  font-weight: 600;
+}
+
+.valorSocial {
+  color: green;
+  margin-left: 8px;
+}
+
+.psicologoModalidade {
+  width: fit-content;
+  background-color: #e6e6e6;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+}
 
 /* Barra Lateral */ 
 .sideBar {

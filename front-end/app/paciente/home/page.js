@@ -26,6 +26,8 @@ export default function Home() {
     prefAbordagens: []
   });
 
+  const [psicologos, setPsicologos] = useState([]);
+
   useEffect(() => {
     const id = localStorage.getItem('pacienteId');
     if (!id) {
@@ -45,6 +47,11 @@ export default function Home() {
         console.error('Erro ao buscar paciente:', err);
         router.push('/app/login');
       });
+
+      fetch('http://localhost:8080/pacientes/recomendados')
+      .then(res => res.json())
+      .then(data => setPsicologos(data))
+      .catch(err => console.error('Erro ao buscar psicólogos:', err));
   }, []);
 
   const handleHome = () => {
@@ -66,10 +73,42 @@ export default function Home() {
             </div>
         </header>
 
-        {/* Conteúdo Principal */}
-        <div className={styles.mainContent}>
-            {/*<h1>Bem-vindo, {paciente.nome}</h1>*/}
+      {/* Conteúdo Principal */}
+      <div className={styles.mainContent}>
+        <div className={styles.psicologoList}>
+          {psicologos.map(psicologo => (
+            <div 
+              key={psicologo.id} 
+              className={styles.psicologoCard}
+              onClick={() => handleOpenPerfilPsicologo(psicologo.id)}
+              style={{ cursor: 'pointer' }}
+            >
+              <img
+                src={psicologo.foto || '/default-avatar.jpeg'}
+                alt={`Foto de ${psicologo.nome}`}
+                className={styles.psicologoFoto}
+              />
+              <div className={styles.psicologoInfo}>
+                <h3>{psicologo.nome}</h3>
+                <p className={styles.psicologoBio}>{psicologo.bio}</p>
+                <p className={styles.psicologoValor}>
+                  {psicologo.valorConsulta}R$/50min{' '}
+                  {psicologo.aceitaBeneficio && (
+                    <span className={styles.valorSocial}>Valor Social</span>
+                  )}
+                </p>
+                <p className={styles.psicologoModalidade}>
+                  {psicologo.modalidadeAtendimento === 'REMOTO'
+                    ? 'Remoto'
+                    : psicologo.modalidadeAtendimento === 'PRESENCIAL'
+                    ? 'Presencial'
+                    : 'Híbrido'}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
+      </div>
 
         {/* Barra Lateral */}
         <div className={styles.sideBar}>
