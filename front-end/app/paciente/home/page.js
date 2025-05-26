@@ -47,6 +47,10 @@ export default function Home() {
       });
   }, []);
 
+  const handleHome = () => {
+    router.push('/paciente/home')
+  }
+
   const handleLogout = () => {
     localStorage.clear();
     router.push('/paciente/login');
@@ -80,6 +84,12 @@ export default function Home() {
                     </button>
                 </div>
             </div>
+
+            {/* Botão Home */}
+            <button onClick={handleHome} className={styles.navButton}>
+            <span className="material-symbols-outlined">home</span>
+            <span>Início</span>
+            </button>
 
             {/* Botão Pesquisar */}
             <button className={styles.navButton}>
