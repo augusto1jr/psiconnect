@@ -3,11 +3,9 @@ package dev.psiconnect.controllers;
 import dev.psiconnect.dtos.requests.EnderecoPacRequestDTO;
 import dev.psiconnect.dtos.requests.PacienteRequestDTO;
 import dev.psiconnect.dtos.responses.PacienteResponseDTO;
+import dev.psiconnect.dtos.responses.PsicologoResponseDTO;
 import dev.psiconnect.entities.*;
-import dev.psiconnect.repositories.AbordagemRepository;
-import dev.psiconnect.repositories.EnderecoPacRepository;
-import dev.psiconnect.repositories.EspecialidadeRepository;
-import dev.psiconnect.repositories.PacienteRepository;
+import dev.psiconnect.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +29,9 @@ public class PacienteController {
 
     @Autowired
     private AbordagemRepository abordagemRepository;
+
+    @Autowired
+    private PsicologoRepository psicologoRepository;
 
     /* ENDPOINT CADASTRO SIMPLIFICADO */
     @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -175,5 +176,16 @@ public class PacienteController {
                     return ResponseEntity.ok(new PacienteResponseDTO(paciente));
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/recomendados")
+    public ResponseEntity<List<PsicologoResponseDTO>> getPsicologosRecomendados() {
+        List<Psicologo> recomendados = psicologoRepository.findTopRecomendados();
+        List<PsicologoResponseDTO> response = recomendados.stream()
+                .map(PsicologoResponseDTO::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
     }
 }
