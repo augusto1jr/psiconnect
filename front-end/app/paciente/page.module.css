@@ -65,8 +65,8 @@
 }
 
 .psicologoFoto {
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -76,14 +76,35 @@
   flex-direction: column;
 }
 
-.psicologoBio {
+.psicologoCrp {
+  font-size: 12px;
   color: #666;
   margin: 4px 0;
+}
+
+.chipsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.chip {
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.psicologoBio {
+  color: #666;
+  margin: 10px 0;
 }
 
 .psicologoValor {
   color: var(--cor3);
   font-weight: 600;
+  margin-top: 10px;
 }
 
 .valorSocial {
@@ -93,12 +114,32 @@
 
 .psicologoModalidade {
   width: fit-content;
-  background-color: #e6e6e6;
-  margin-top: 6px;
+  background-color: var(--cor1);
   padding: 2px 8px;
   border-radius: 8px;
   font-size: 12px;
+  margin-top: 12px;
 }
+
+.psicologoStats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.psicologoStat {
+  display: flex;
+  align-items: center;
+  color: #333;
+  font-size: 14px;
+}
+
+.psicologoStat strong {
+  margin: 0 4px;
+  color: #000;
+}
+
 
 /* Barra Lateral */ 
 .sideBar {
@@ -209,7 +250,6 @@
 
 
 /* Rodapé */
-
 .footer {
   display: none;
   flex-shrink: 0;

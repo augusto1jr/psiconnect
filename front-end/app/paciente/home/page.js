@@ -27,32 +27,63 @@ export default function Home() {
   });
 
   const [psicologos, setPsicologos] = useState([]);
+  const [consultasPorPsicologo, setConsultasPorPsicologo] = useState({});
+  const [avaliacoesPorPsicologo, setAvaliacoesPorPsicologo] = useState({});
 
-  useEffect(() => {
-    const id = localStorage.getItem('pacienteId');
-    if (!id) {
+
+useEffect(() => {
+  const id = localStorage.getItem('pacienteId');
+  if (!id) {
+    router.push('/app/login');
+    return;
+  }
+
+  // Dados do paciente
+  fetch(`http://localhost:8080/pacientes/${id}`)
+    .then(res => res.json())
+    .then(data => setPaciente(data))
+    .catch(err => {
+      console.error('Erro ao buscar paciente:', err);
       router.push('/app/login');
-      return;
-    }
+    });
 
-    fetch(`http://localhost:8080/pacientes/${id}`)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Erro ao buscar paciente');
-        }
-        return res.json();
-      })
-      .then(data => setPaciente(data))
-      .catch(err => {
-        console.error('Erro ao buscar paciente:', err);
-        router.push('/app/login');
+  // Psicólogos recomendados
+  fetch('http://localhost:8080/pacientes/recomendados')
+    .then(res => res.json())
+    .then(data => {
+      setPsicologos(data);
+      data.forEach(psicologo => {
+        fetchConsultasEAvaliacoes(psicologo.id);
       });
+    })
+    .catch(err => console.error('Erro ao buscar psicólogos:', err));
+}, []);
 
-      fetch('http://localhost:8080/pacientes/recomendados')
-      .then(res => res.json())
-      .then(data => setPsicologos(data))
-      .catch(err => console.error('Erro ao buscar psicólogos:', err));
-  }, []);
+
+  // Consultas e Avaliações de Psicólogos
+  const fetchConsultasEAvaliacoes = (id) => {
+  // Consultas
+  fetch(`http://localhost:8080/psicologos/${id}/consultas`)
+    .then(res => res.json())
+    .then(data => {
+      setConsultasPorPsicologo(prev => ({
+        ...prev,
+        [id]: data
+      }));
+    })
+    .catch(err => console.error(err));
+
+  // Avaliações
+  fetch(`http://localhost:8080/psicologos/${id}/avaliacoes`)
+    .then(res => res.json())
+    .then(data => {
+      setAvaliacoesPorPsicologo(prev => ({
+        ...prev,
+        [id]: data
+      }));
+    })
+    .catch(err => console.error(err));
+    };
 
   const handleHome = () => {
     router.push('/paciente/home')
@@ -62,6 +93,8 @@ export default function Home() {
     localStorage.clear();
     router.push('/paciente/login');
   };
+
+  
 
   return (
     <main className={styles.main}>
@@ -76,37 +109,78 @@ export default function Home() {
       {/* Conteúdo Principal */}
       <div className={styles.mainContent}>
         <div className={styles.psicologoList}>
-          {psicologos.map(psicologo => (
-            <div 
-              key={psicologo.id} 
-              className={styles.psicologoCard}
-              onClick={() => handleOpenPerfilPsicologo(psicologo.id)}
-              style={{ cursor: 'pointer' }}
-            >
-              <img
-                src={psicologo.foto || '/default-avatar.jpeg'}
-                alt={`Foto de ${psicologo.nome}`}
-                className={styles.psicologoFoto}
-              />
-              <div className={styles.psicologoInfo}>
-                <h3>{psicologo.nome}</h3>
-                <p className={styles.psicologoBio}>{psicologo.bio}</p>
-                <p className={styles.psicologoValor}>
-                  {psicologo.valorConsulta}R$/50min{' '}
-                  {psicologo.aceitaBeneficio && (
-                    <span className={styles.valorSocial}>Valor Social</span>
-                  )}
-                </p>
-                <p className={styles.psicologoModalidade}>
-                  {psicologo.modalidadeAtendimento === 'REMOTO'
-                    ? 'Remoto'
-                    : psicologo.modalidadeAtendimento === 'PRESENCIAL'
-                    ? 'Presencial'
-                    : 'Híbrido'}
-                </p>
+          {psicologos.map(psicologo => {
+            const consultas = consultasPorPsicologo[psicologo.id] || [];
+            const avaliacoes = avaliacoesPorPsicologo[psicologo.id] || [];
+
+            const totalAtendimentos = consultas.length;
+
+            const mediaAvaliacoes = 
+              avaliacoes.length > 0
+                ? (avaliacoes.reduce((sum, item) => sum + item.nota, 0) / avaliacoes.length).toFixed(1)
+                : 'N/A';
+
+            return (
+              <div 
+                key={psicologo.id} 
+                className={styles.psicologoCard}
+                onClick={() => handleOpenPerfilPsicologo(psicologo.id)}
+                style={{ cursor: 'pointer' }}
+              >
+                <img
+                  src={psicologo.foto || '/default-avatar.jpeg'}
+                  alt={`Foto de ${psicologo.nome}`}
+                  className={styles.psicologoFoto}
+                />
+                <div className={styles.psicologoInfo}>
+                  <h3>{psicologo.nome}</h3>
+
+                  <p className={styles.psicologoCrp}>CRP: {psicologo.crp}</p>
+
+                  <div className={styles.chipsContainer}>
+                    {psicologo.especialidades.slice(0,3).map((esp) => (
+                      <span key={esp} className={styles.chip}>{esp}</span>
+                    ))}
+                    {psicologo.abordagens.slice(0,3).map((abo) => (
+                      <span key={abo} className={styles.chip}>{abo}</span>
+                    ))}
+                  </div>
+
+                  <p className={styles.psicologoBio}>{psicologo.bio}</p>
+
+                  <p className={styles.psicologoValor}>
+                    {psicologo.valorConsulta}R$/50min{' '}
+                    {psicologo.aceitaBeneficio && (
+                      <span className={styles.valorSocial}>Valor Social Disponível</span>
+                    )}
+                  </p>
+
+                  <p className={styles.psicologoModalidade}>
+                    {psicologo.modalidadeAtendimento === 'REMOTO'
+                      ? 'Remoto'
+                      : psicologo.modalidadeAtendimento === 'PRESENCIAL'
+                      ? 'Presencial'
+                      : 'Híbrido'}
+                  </p>
+                  
+                  <div className={styles.psicologoStats}>
+                    <div className={styles.psicologoStat}>
+                      <span className="material-symbols-outlined starIcon">star</span>
+                      <strong>{mediaAvaliacoes}</strong> 
+                      <span>({avaliacoes.length} comentários)</span>
+                    </div>
+                    
+                    <div className={styles.psicologoStat}>
+                      <span className="material-symbols-outlined">group</span>
+                      <strong>{totalAtendimentos}</strong> 
+                      <span>atendimentos</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
+
         </div>
       </div>
 
