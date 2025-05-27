@@ -8,3 +8,6 @@
 
 ### Tela de Login (Psicólogo)
 ![Tela de Login - Psicólogo](screens/tela-login-psicologo.png)
+
+### Tela Home (Paciente)
+![Tela de Login - Psicólogo](screens/tela-home-paciente.png)
