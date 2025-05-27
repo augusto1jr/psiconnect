@@ -40,10 +40,19 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding-left: 250px;
   background-color: #fff;
   color: #000;
+  padding-top: 60px;
+}
+
+.psicologoCardContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
 }
 
 .psicologoList {
@@ -58,6 +67,7 @@
   gap: 16px;
   padding: 16px;
   border-bottom: 1px solid #ddd;
+  max-width: 1400px;
 }
 
 .psicologoCard:last-child {
@@ -72,6 +82,7 @@
 }
 
 .psicologoInfo {
+  flex: 1;
   display: flex;
   flex-direction: column;
 }

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../page.module.css';
+import AgendaPsicologo from './AgendaPsicologo';
 
 export default function Home() {
   const router = useRouter();
@@ -29,6 +30,13 @@ export default function Home() {
   const [psicologos, setPsicologos] = useState([]);
   const [consultasPorPsicologo, setConsultasPorPsicologo] = useState({});
   const [avaliacoesPorPsicologo, setAvaliacoesPorPsicologo] = useState({});
+
+  const disponibilidadeMockada = [
+  { diaSemana: 'SEG', data: '26 MAI', horarios: ['15:00'] },
+  { diaSemana: 'TER', data: '27 MAI', horarios: ['15:00'] },
+  { diaSemana: 'QUA', data: '28 MAI', horarios: ['14:00', '15:00', '16:00'] },
+  { diaSemana: 'QUI', data: '29 MAI', horarios: ['18:00'] },
+];
 
 
 useEffect(() => {
@@ -132,55 +140,54 @@ useEffect(() => {
                   alt={`Foto de ${psicologo.nome}`}
                   className={styles.psicologoFoto}
                 />
-                <div className={styles.psicologoInfo}>
-                  <h3>{psicologo.nome}</h3>
-
-                  <p className={styles.psicologoCrp}>CRP: {psicologo.crp}</p>
-
-                  <div className={styles.chipsContainer}>
-                    {psicologo.especialidades.slice(0,3).map((esp) => (
-                      <span key={esp} className={styles.chip}>{esp}</span>
-                    ))}
-                    {psicologo.abordagens.slice(0,3).map((abo) => (
-                      <span key={abo} className={styles.chip}>{abo}</span>
-                    ))}
-                  </div>
-
-                  <p className={styles.psicologoBio}>{psicologo.bio}</p>
-
-                  <p className={styles.psicologoValor}>
-                    {psicologo.valorConsulta}R$/50min{' '}
-                    {psicologo.aceitaBeneficio && (
-                      <span className={styles.valorSocial}>Valor Social Disponível</span>
-                    )}
-                  </p>
-
-                  <p className={styles.psicologoModalidade}>
-                    {psicologo.modalidadeAtendimento === 'REMOTO'
-                      ? 'Remoto'
-                      : psicologo.modalidadeAtendimento === 'PRESENCIAL'
-                      ? 'Presencial'
-                      : 'Híbrido'}
-                  </p>
+                <div className={styles.psicologoCardContent}>
+                  <div className={styles.psicologoInfo}>
+                    <h3>{psicologo.nome}</h3>
+                    <p className={styles.psicologoCrp}>CRP: {psicologo.crp}</p>
+                    <div className={styles.chipsContainer}>
+                      {psicologo.especialidades.slice(0,3).map((esp) => (
+                        <span key={esp} className={styles.chip}>{esp}</span>
+                      ))}
+                      {psicologo.abordagens.slice(0,3).map((abo) => (
+                        <span key={abo} className={styles.chip}>{abo}</span>
+                      ))}
+                    </div>
+                    <p className={styles.psicologoBio}>{psicologo.bio}</p>
+                    <p className={styles.psicologoValor}>
+                      {psicologo.valorConsulta}R$/50min{' '}
+                      {psicologo.aceitaBeneficio && (
+                        <span className={styles.valorSocial}>Valor Social Disponível</span>
+                      )}
+                    </p>
+                    <p className={styles.psicologoModalidade}>
+                      {psicologo.modalidadeAtendimento === 'REMOTO'
+                        ? 'Remoto'
+                        : psicologo.modalidadeAtendimento === 'PRESENCIAL'
+                        ? 'Presencial'
+                        : 'Híbrido'}
+                    </p>
                   
-                  <div className={styles.psicologoStats}>
-                    <div className={styles.psicologoStat}>
-                      <span className="material-symbols-outlined starIcon">star</span>
-                      <strong>{mediaAvaliacoes}</strong> 
-                      <span>({avaliacoes.length} comentários)</span>
+                    <div className={styles.psicologoStats}>
+                      <div className={styles.psicologoStat}>
+                        <span className="material-symbols-outlined starIcon">star</span>
+                        <strong>{mediaAvaliacoes}</strong>
+                        <span>({avaliacoes.length} comentários)</span>
+                      </div>
+                  
+                      <div className={styles.psicologoStat}>
+                        <span className="material-symbols-outlined">group</span>
+                        <strong>{totalAtendimentos}</strong>
+                        <span>atendimentos</span>
+                      </div>
                     </div>
-                    
-                    <div className={styles.psicologoStat}>
-                      <span className="material-symbols-outlined">group</span>
-                      <strong>{totalAtendimentos}</strong> 
-                      <span>atendimentos</span>
-                    </div>
+                  </div>
+                  <div className={styles.agendaContainer}>
+                    <AgendaPsicologo disponibilidade={disponibilidadeMockada}/>
                   </div>
                 </div>
               </div>
             );
           })}
-
         </div>
       </div>
 
