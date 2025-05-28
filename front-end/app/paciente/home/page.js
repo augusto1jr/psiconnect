@@ -102,7 +102,12 @@ useEffect(() => {
     router.push('/paciente/login');
   };
 
-  
+  const handleOpenPerfilPsicologo = (pacienteId, psicologoId) => {
+    localStorage.clear();
+    localStorage.setItem('pacienteId', pacienteId);
+    localStorage.setItem('psicologoId', psicologoId);
+    router.push('/paciente/psicologo');
+  };
 
   return (
     <main className={styles.main}>
@@ -132,18 +137,24 @@ useEffect(() => {
               <div 
                 key={psicologo.id} 
                 className={styles.psicologoCard}
-                onClick={() => handleOpenPerfilPsicologo(psicologo.id)}
+                onClick={() => handleOpenPerfilPsicologo(paciente.id, psicologo.id)}
                 style={{ cursor: 'pointer' }}
               >
+                
+                {/* Foto de Perfil */}
                 <img
                   src={psicologo.foto || '/default-avatar.jpeg'}
                   alt={`Foto de ${psicologo.nome}`}
                   className={styles.psicologoFoto}
                 />
+
+                {/* Informações Básicas do Psicólogo */}
                 <div className={styles.psicologoCardContent}>
                   <div className={styles.psicologoInfo}>
                     <h3>{psicologo.nome}</h3>
                     <p className={styles.psicologoCrp}>CRP: {psicologo.crp}</p>
+
+                    {/* Informações de Abordagens e Especialidades */}
                     <div className={styles.chipsContainer}>
                       {psicologo.especialidades.slice(0,3).map((esp) => (
                         <span key={esp} className={styles.chip}>{esp}</span>
@@ -151,7 +162,9 @@ useEffect(() => {
                       {psicologo.abordagens.slice(0,3).map((abo) => (
                         <span key={abo} className={styles.chip}>{abo}</span>
                       ))}
+
                     </div>
+                    {/* Informações de Atendimento: Bio, Valor, Benefício, Modalidade */}
                     <p className={styles.psicologoBio}>{psicologo.bio}</p>
                     <p className={styles.psicologoValor}>
                       {psicologo.valorConsulta}R$/50min{' '}
@@ -166,7 +179,8 @@ useEffect(() => {
                         ? 'Presencial'
                         : 'Híbrido'}
                     </p>
-                  
+
+                    {/* Avaliações e Número de Consultas */}
                     <div className={styles.psicologoStats}>
                       <div className={styles.psicologoStat}>
                         <span className="material-symbols-outlined starIcon">star</span>
@@ -181,6 +195,8 @@ useEffect(() => {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Agenda do Psicólogo */}
                   <div className={styles.agendaContainer}>
                     <AgendaPsicologo disponibilidade={disponibilidadeMockada}/>
                   </div>
