@@ -151,6 +151,10 @@
   color: #000;
 }
 
+/* Informações Extra da Página de Perfil */
+.psicologoInfoExtra {
+  border-top: 1px solid #ddd;
+}
 
 /* Barra Lateral */ 
 .sideBar {
