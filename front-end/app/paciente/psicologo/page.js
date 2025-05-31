@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../page.module.css';
 import AgendaPsicologo from '../home/AgendaPsicologo';
+import AvaliacoesPsicologo from './AvaliacoesPsicologo';
 
 export default function PerfilPsicologo() {
   const router = useRouter();
@@ -226,6 +227,9 @@ export default function PerfilPsicologo() {
                     <h3>Formação do Psicólogo:</h3>
                     <p>{psicologo.formacao}</p>
                   </div>
+                </div>
+                <div className={styles.avaliacoesContainer}>
+                  <AvaliacoesPsicologo avaliacoes={avaliacoes}/>
                 </div>
               </div>
             );

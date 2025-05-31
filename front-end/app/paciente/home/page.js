@@ -137,8 +137,6 @@ useEffect(() => {
               <div 
                 key={psicologo.id} 
                 className={styles.psicologoCard}
-                onClick={() => handleOpenPerfilPsicologo(paciente.id, psicologo.id)}
-                style={{ cursor: 'pointer' }}
               >
                 
                 {/* Foto de Perfil */}
@@ -146,11 +144,18 @@ useEffect(() => {
                   src={psicologo.foto || '/default-avatar.jpeg'}
                   alt={`Foto de ${psicologo.nome}`}
                   className={styles.psicologoFoto}
+                  onClick={() => handleOpenPerfilPsicologo(paciente.id, psicologo.id)}
+                  style={{ cursor: 'pointer' }}
                 />
 
                 {/* Informações Básicas do Psicólogo */}
                 <div className={styles.psicologoCardContent}>
-                  <div className={styles.psicologoInfo}>
+                  <div 
+                  className={styles.psicologoInfo}
+                  onClick={() => handleOpenPerfilPsicologo(paciente.id, psicologo.id)}
+                  style={{ cursor: 'pointer' }}>
+
+                    {/* Nome e CRP do Psicólogo */}
                     <h3>{psicologo.nome}</h3>
                     <p className={styles.psicologoCrp}>CRP: {psicologo.crp}</p>
 
