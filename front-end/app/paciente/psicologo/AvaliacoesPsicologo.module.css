@@ -1,0 +1,59 @@
+.avaliacoesContainer {
+  background-color: var(--cor2);
+  color: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 32px;
+  margin-bottom: 60px;
+}
+
+.h2 {
+  margin-bottom: 8px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stars {
+  color: gold;
+  font-size: 18px;
+}
+
+.cardsContainer {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.card {
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+  padding: 16px;
+  width: 300px;
+  position: relative;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 20px;
+  height: 20px;
+  background-color: white;
+}
+
+.comentario {
+  margin: 12px 0;
+}
+
+.autor {
+  color: #5a5a5a;
+  font-size: 14px;
+}
