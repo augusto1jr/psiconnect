@@ -1,9 +1,16 @@
 .agendaContainer {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
   background-color: #f9f9f9;
   padding: 8px;
   border-radius: 12px;
+}
+
+.diasContainer {
+  display: flex;
+  gap: 15px;
 }
 
 .dia {
@@ -53,4 +60,36 @@
 
 .horario:hover {
   background-color: var(--cor1);
+}
+
+.horarioSelecionado {
+  background-color: var(--cor2);
+  color: #fff;
+  font-weight: bold;
+  border: 2px solid var(--cor2);
+}
+
+.agendarButton{
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  transition: 0.2s ease;
+  box-sizing: border-box;
+  font-size: 16px;
+  padding: 12px 16px;
+  background-color: var(--cor1);
+  color: #fff;
+  gap: 10px;
+  border-radius: 12px;
+}
+
+.agendarButton:disabled {
+  background-color: var(--cor1);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.agendarButton:hover{
+  background-color: var(--cor3);
 }
