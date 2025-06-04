@@ -1,13 +1,3 @@
--- ########## CRIANDO O BANCO DE DADOS ##########
-
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'psiconnect') THEN
-        CREATE DATABASE psiconnect;
-    END IF;
-END
-$$;
-
 -- ########## Tabelas Relacionadas aos Psicólogos ##########
 
 -- Tabela de Psicólogos
