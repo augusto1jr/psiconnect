@@ -28,9 +28,7 @@ export default function LoginPsicologo() {
       if (response.ok) {
         localStorage.setItem('psicologoId', resposta.id);
         localStorage.setItem('psicologoNome', resposta.nome);
-
-        window.alert('Login realizado com sucesso!');
-        /*router.push('/psicologo/home');*/
+        router.push('/psicologo/home');
       } else {
         window.alert(resposta.mensagem || 'E-mail ou senha inválidos.');
       }
