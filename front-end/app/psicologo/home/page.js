@@ -8,6 +8,7 @@ import styles from './home.module.css';
 
 export default function HomePsicologo() {
   const router = useRouter();
+
   const [psicologo, setPsicologo] = useState({
     id: '',
     crp: '',
@@ -32,7 +33,9 @@ export default function HomePsicologo() {
     abordagens: []
   });
 
-  const [consultas, setConsultas] = useState([]);
+  const [consultasAgendadas, setConsultasAgendadas] = useState([]);
+  const [consultasConcluidas, setConsultasConcluidas] = useState([]);
+  const [consultasCanceladas, setConsultasCanceladas] = useState([]);
 
   useEffect(() => {
     const psicologoId = localStorage.getItem('psicologoId');
@@ -41,7 +44,7 @@ export default function HomePsicologo() {
       return;
     }
 
-    // Dados do psicólogo
+    // Buscar dados do psicólogo
     fetch(`http://localhost:8080/psicologos/${psicologoId}`)
       .then(res => res.json())
       .then(data => setPsicologo(data))
@@ -50,25 +53,34 @@ export default function HomePsicologo() {
         router.push('/login');
       });
 
-    // Consultas do psicólogo
-    fetch(`http://localhost:8080/psicologos/${psicologoId}/consultas`)
+    // Buscar consultas AGENDADAS
+    fetch(`http://localhost:8080/psicologos/${psicologoId}/consultas?status=AGENDADA`)
       .then(res => res.json())
-      .then(data => setConsultas(data))
-      .catch(err => console.error('Erro ao buscar consultas:', err));
+      .then(data => setConsultasAgendadas(data))
+      .catch(err => console.error('Erro ao buscar consultas agendadas:', err));
+
+    // Buscar consultas CONCLUIDAS
+    fetch(`http://localhost:8080/psicologos/${psicologoId}/consultas?status=CONCLUIDA`)
+      .then(res => res.json())
+      .then(data => setConsultasConcluidas(data))
+      .catch(err => console.error('Erro ao buscar consultas concluídas:', err));
+
+    // Buscar consultas CANCELADAS
+    fetch(`http://localhost:8080/psicologos/${psicologoId}/consultas?status=CANCELADA`)
+      .then(res => res.json())
+      .then(data => setConsultasCanceladas(data))
+      .catch(err => console.error('Erro ao buscar consultas canceladas:', err));
+
   }, []);
 
   const handleHome = () => {
-    router.push('/paciente/home')
-  }
+    router.push('/psicologo/home');
+  };
 
   const handleLogout = () => {
     localStorage.clear();
-    router.push('/paciente/login');
+    router.push('/psicologo/login');
   };
-
-  const consultasAgendadas = consultas.filter(c => c.status === 'AGENDADA');
-  const consultasConcluidas = consultas.filter(c => c.status === 'CONCLUIDA');
-  const consultasCanceladas = consultas.filter(c => c.status === 'CANCELADA');
 
   return (
     <main className={styles.main}>
@@ -87,9 +99,9 @@ export default function HomePsicologo() {
             ) : (
               consultasAgendadas.map(consulta => (
                 <div key={consulta.id} className={styles.consultaCard}>
-                  <p><strong>Paciente:</strong> {consulta.pacienteNome}</p>
-                  <p><strong>Data:</strong> {consulta.data}</p>
-                  <p><strong>Horário:</strong> {consulta.horario}</p>
+                  <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
+                  <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
+                  <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                   <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
                 </div>
               ))
@@ -104,9 +116,9 @@ export default function HomePsicologo() {
             ) : (
               consultasConcluidas.map(consulta => (
                 <div key={consulta.id} className={styles.consultaCard}>
-                  <p><strong>Paciente:</strong> {consulta.pacienteNome}</p>
-                  <p><strong>Data:</strong> {consulta.data}</p>
-                  <p><strong>Horário:</strong> {consulta.horario}</p>
+                  <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
+                  <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
+                  <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                   <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
                 </div>
               ))
@@ -121,9 +133,9 @@ export default function HomePsicologo() {
             ) : (
               consultasCanceladas.map(consulta => (
                 <div key={consulta.id} className={styles.consultaCard}>
-                  <p><strong>Paciente:</strong> {consulta.pacienteNome}</p>
-                  <p><strong>Data:</strong> {consulta.data}</p>
-                  <p><strong>Horário:</strong> {consulta.horario}</p>
+                  <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
+                  <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
+                  <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                   <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
                 </div>
               ))
