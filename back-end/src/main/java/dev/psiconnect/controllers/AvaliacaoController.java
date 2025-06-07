@@ -72,4 +72,13 @@ public class AvaliacaoController {
                 .map(avaliacao -> ResponseEntity.ok(new AvaliacaoResponseDTO(avaliacao)))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/consulta/{id}")
+    public ResponseEntity<AvaliacaoResponseDTO> getAvaliacaoByConsultaId(@PathVariable Long id) {
+        return avaliacaoRepository.findByConsultaId(id)
+                .map(avaliacao -> ResponseEntity.ok(new AvaliacaoResponseDTO(avaliacao)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }
