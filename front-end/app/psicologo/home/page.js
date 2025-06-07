@@ -36,6 +36,7 @@ export default function HomePsicologo() {
   const [consultasAgendadas, setConsultasAgendadas] = useState([]);
   const [consultasConcluidas, setConsultasConcluidas] = useState([]);
   const [consultasCanceladas, setConsultasCanceladas] = useState([]);
+  const [pacientes, setPacientes] = useState([]);
 
   useEffect(() => {
     const psicologoId = localStorage.getItem('psicologoId');
@@ -52,6 +53,12 @@ export default function HomePsicologo() {
         console.error('Erro ao buscar psicólogo:', err);
         router.push('/login');
       });
+
+    // Buscar pacientes
+    fetch(`http://localhost:8080/pacientes`)
+      .then(res => res.json())
+      .then(data => setPacientes(data))
+      .catch(err => console.error('Erro ao buscar pacientes:', err));
 
     // Buscar consultas AGENDADAS
     fetch(`http://localhost:8080/psicologos/${psicologoId}/consultas?status=AGENDADA`)
@@ -82,6 +89,17 @@ export default function HomePsicologo() {
     router.push('/psicologo/login');
   };
 
+  const getFotoPaciente = (idPaciente) => {
+    const paciente = pacientes.find(p => p.id === idPaciente);
+    return paciente ? paciente.foto : '/default-avatar.png';
+  };
+
+  const handleOpenConsulta = (consultaId, pacienteId) => {
+    localStorage.setItem('consultaId', consultaId);
+    localStorage.setItem('pacienteId', pacienteId);
+    router.push('/psicologo/consulta');
+  };
+
   return (
     <main className={styles.main}>
       <Header />
@@ -98,11 +116,20 @@ export default function HomePsicologo() {
               <p>Sem consultas agendadas.</p>
             ) : (
               consultasAgendadas.map(consulta => (
-                <div key={consulta.id} className={styles.consultaCard}>
-                  <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
-                  <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
-                  <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                  <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
+                <div
+                  key={consulta.id}
+                  className={styles.consultaCard}
+                  onClick={() => handleOpenConsulta(consulta.id, consulta.idPaciente)}
+                >
+                  <div className={styles.infoConsulta}>
+                    <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
+                    <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
+                    <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
+                  </div>
+                  <div className={styles.fotoPaciente}>
+                    <img src={getFotoPaciente(consulta.idPaciente)} alt={`Foto de ${consulta.nomePaciente}`} />
+                  </div>
                 </div>
               ))
             )}
@@ -115,11 +142,20 @@ export default function HomePsicologo() {
               <p>Sem consultas concluídas.</p>
             ) : (
               consultasConcluidas.map(consulta => (
-                <div key={consulta.id} className={styles.consultaCard}>
-                  <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
-                  <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
-                  <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                  <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
+                <div
+                  key={consulta.id}
+                  className={styles.consultaCard}
+                  onClick={() => handleOpenConsulta(consulta.id, consulta.idPaciente)}
+                >
+                  <div className={styles.infoConsulta}>
+                    <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
+                    <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
+                    <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
+                  </div>
+                  <div className={styles.fotoPaciente}>
+                    <img src={getFotoPaciente(consulta.idPaciente)} alt={`Foto de ${consulta.nomePaciente}`} />
+                  </div>
                 </div>
               ))
             )}
@@ -132,11 +168,20 @@ export default function HomePsicologo() {
               <p>Sem consultas canceladas.</p>
             ) : (
               consultasCanceladas.map(consulta => (
-                <div key={consulta.id} className={styles.consultaCard}>
-                  <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
-                  <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
-                  <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                  <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
+                <div
+                  key={consulta.id}
+                  className={styles.consultaCard}
+                  onClick={() => handleOpenConsulta(consulta.id, consulta.idPaciente)}
+                >
+                  <div className={styles.infoConsulta}>
+                    <p><strong>Paciente:</strong> {consulta.nomePaciente}</p>
+                    <p><strong>Data:</strong> {new Date(consulta.dataConsulta).toLocaleDateString()}</p>
+                    <p><strong>Horário:</strong> {new Date(consulta.dataConsulta).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p><strong>Modalidade:</strong> {consulta.modalidade}</p>
+                  </div>
+                  <div className={styles.fotoPaciente}>
+                    <img src={getFotoPaciente(consulta.idPaciente)} alt={`Foto de ${consulta.nomePaciente}`} />
+                  </div>
                 </div>
               ))
             )}
@@ -145,7 +190,7 @@ export default function HomePsicologo() {
         </div>
       </div>
 
-      <Sidebar psicologo={psicologo} handleHome={handleHome} handleLogout={handleLogout}/>
+      <Sidebar psicologo={psicologo} handleHome={handleHome} handleLogout={handleLogout} />
       <Footer />
     </main>
   );
