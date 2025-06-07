@@ -1,0 +1,106 @@
+/* Barra Lateral */ 
+.sideBar {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  background-color: var(--cor4);
+  color: var(--cor1);
+  font-size: 18px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* Bloco de perfil */
+.profileBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--cor1);
+  margin-bottom: 20px;
+}
+
+.profileInfo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--cor1);
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.editButton {
+  background: none;
+  border: none;
+  color: var(--cor1);
+  cursor: pointer;
+  font-size: 10px;
+  padding: 2px;
+  margin-bottom: 4px;
+}
+
+/* Botões de Navegação */
+.navButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  color: var(--cor1);
+  font-size: 16px;
+  padding: 12px 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: 0.2s ease;
+  box-sizing: border-box;
+}
+
+.navButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Botão de logout */
+.logoutBlock {
+  margin-top: auto;
+  margin-left: 40px;
+  margin-bottom: 80px;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  border: 2px solid var(--cor1);
+  color: var(--cor1);
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.logoutButton:hover {
+  background-color: var(--cor1);
+  color: var(--cor4);
+}
+
+.logoutButton .material-symbols-outlined {
+  font-size: 20px;
+}

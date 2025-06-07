@@ -1,0 +1,46 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  color: #333;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 20px;
+  margin-left: 250px; 
+}
+
+/* Título interno */
+.h1 {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* Seções */
+.consultaSection,
+.pacienteSection,
+.avaliacaoSection {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+/* Informações do paciente */
+.pacienteInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.pacienteFoto {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--cor2);
+}
