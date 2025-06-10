@@ -1,0 +1,26 @@
+/* Cabeçalho */
+.header {
+  flex-shrink: 0;
+  background-color: var(--cor4);
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logoImage {
+  margin-top: 17px;
+  width: 35px;
+  height: 35px;
+}
+
+.title {
+  text-align: center;
+  padding-bottom: 20px;
+  padding-top: 40px;
+  font-weight: 700;
+  color: var(--cor1);
+}
