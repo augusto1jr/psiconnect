@@ -5,11 +5,30 @@ import Link from "next/link";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+/**
+ * Componente de cadastro de psicólogo.
+ * 
+ * OBS: Ainda não foram criadas as demais etapas/telas de cadastro, como:
+ * Tela de informações pessoais, endereço, telefone, etc.
+ * Tela de informações de saúde: especialidades e abordagens.
+ * Atualmente o cadastro obtem apenas email e senha, os demais dados serão coletados posteriormente (são mockados no momento).
+ * 
+ * Permite que um psicólogo se cadastre com email e senha. Ao cadastrar com sucesso,
+ * o ID e o nome retornados pela API são salvos no `localStorage`.
+ * 
+ * @returns {JSX.Element} Interface de formulário para cadastro de psicólogos.
+ */
 export default function CadastroPsicologo() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
 
+  /**
+   * Lida com o envio do formulário de cadastro.
+   * Faz uma requisição POST para o backend e armazena os dados do psicólogo no localStorage.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} e Evento de envio do formulário.
+   */
   const handleCadastro = async (e) => {
     e.preventDefault();
 
@@ -29,9 +48,9 @@ export default function CadastroPsicologo() {
         localStorage.setItem('psicologoId', resposta.id);
         localStorage.setItem('psicologoNome', resposta.nome);
 
-        //router.push('/psicologo/home');
+        // router.push('/psicologo/home');
       } else {
-        const textoErro = await response.text(); // Só é chamado uma vez
+        const textoErro = await response.text();
         console.error("Erro:", textoErro);
         alert("Erro ao cadastrar: " + textoErro);
       }
@@ -46,9 +65,10 @@ export default function CadastroPsicologo() {
       <section className={`${styles.login} ${customStyles.login}`}>
         <div className={customStyles.img}>{/* Imagem aplicada via CSS */}</div>
         <div className={`${styles.form} ${customStyles.form}`}>
-        <div className={styles.logoContainer}>
-        <img src="/psiconnect-logo.png" alt="Logo PsiConnect" className={styles.logoImage}/>
-        <h1 className={styles.title}>PsiConnect</h1></div>
+          <div className={styles.logoContainer}>
+            <img src="/psiconnect-logo.png" alt="Logo PsiConnect" className={styles.logoImage} />
+            <h1 className={styles.title}>PsiConnect</h1>
+          </div>
           <form onSubmit={handleCadastro}>
             <div className={styles.formGroup}>
               <label htmlFor="email">Email:</label><br />
@@ -79,7 +99,7 @@ export default function CadastroPsicologo() {
             </div>
 
             <div className={styles.btn_cadastro}>
-              <button type="submit">Cadastrar</button>
+              <button type="submit">Continuar</button>
             </div>
 
             <div className={styles.btn_forgot}>

@@ -4,8 +4,18 @@ import { useRouter } from 'next/navigation';
 import styles from '../page.module.css';
 import AgendaPsicologo from './AgendaPsicologo';
 
+/**
+ * Página inicial do paciente.
+ * Exibe lista de psicólogos recomendados com informações e agenda.
+ * Também contém barra lateral com navegação e botão de logout.
+ */
 export default function Home() {
   const router = useRouter();
+
+  /**
+   * Estado que armazena os dados do paciente logado.
+   * @type {Object}
+   */
   const [paciente, setPaciente] = useState({
     id: '',
     cpf: '',
@@ -27,86 +37,116 @@ export default function Home() {
     prefAbordagens: []
   });
 
+  /**
+   * Lista de psicólogos recomendados ao paciente.
+   * @type {Array}
+   */
   const [psicologos, setPsicologos] = useState([]);
+
+  /**
+   * Consultas agrupadas por ID de psicólogo.
+   * @type {Object.<string, Array>}
+   */
   const [consultasPorPsicologo, setConsultasPorPsicologo] = useState({});
+
+  /**
+   * Avaliações agrupadas por ID de psicólogo.
+   * @type {Object.<string, Array>}
+   */
   const [avaliacoesPorPsicologo, setAvaliacoesPorPsicologo] = useState({});
 
+  /**
+   * Disponibilidade fictícia usada para exibição de agenda.
+   * @type {Array<{diaSemana: string, data: string, horarios: string[]}>}
+   */
   const disponibilidadeMockada = [
-  { diaSemana: 'SEG', data: '26 MAI', horarios: ['15:00'] },
-  { diaSemana: 'TER', data: '27 MAI', horarios: ['15:00'] },
-  { diaSemana: 'QUA', data: '28 MAI', horarios: ['14:00', '15:00', '16:00'] },
-  { diaSemana: 'QUI', data: '29 MAI', horarios: ['18:00'] },
-];
+    { diaSemana: 'QUA', data: '18 JUN', horarios: ['18:00'] },
+    { diaSemana: 'QUI', data: '19 JUN', horarios: ['14:00', '15:00', '16:00'] },
+    { diaSemana: 'SEX', data: '20 JUN', horarios: ['18:00'] },
+    { diaSemana: 'SAB', data: '21 JUN', horarios: ['10:00'] }
+  ];
 
-
-useEffect(() => {
-  const id = localStorage.getItem('pacienteId');
-  if (!id) {
-    router.push('/app/login');
-    return;
-  }
-
-  // Dados do paciente
-  fetch(`http://localhost:8080/pacientes/${id}`)
-    .then(res => res.json())
-    .then(data => setPaciente(data))
-    .catch(err => {
-      console.error('Erro ao buscar paciente:', err);
+  // useEffect para carregar dados ao montar a página
+  useEffect(() => {
+    const id = localStorage.getItem('pacienteId');
+    if (!id) {
       router.push('/app/login');
-    });
+      return;
+    }
 
-  // Psicólogos recomendados
-  fetch('http://localhost:8080/pacientes/recomendados')
-    .then(res => res.json())
-    .then(data => {
-      setPsicologos(data);
-      data.forEach(psicologo => {
-        fetchConsultasEAvaliacoes(psicologo.id);
+    // Buscar dados do paciente
+    fetch(`http://localhost:8080/pacientes/${id}`)
+      .then(res => res.json())
+      .then(data => setPaciente(data))
+      .catch(err => {
+        console.error('Erro ao buscar paciente:', err);
+        router.push('/app/login');
       });
-    })
-    .catch(err => console.error('Erro ao buscar psicólogos:', err));
-}, []);
 
+    // Buscar psicólogos recomendados
+    fetch('http://localhost:8080/pacientes/recomendados')
+      .then(res => res.json())
+      .then(data => {
+        setPsicologos(data);
+        data.forEach(psicologo => {
+          fetchConsultasEAvaliacoes(psicologo.id);
+        });
+      })
+      .catch(err => console.error('Erro ao buscar psicólogos:', err));
+  }, []);
 
-  // Consultas e Avaliações de Psicólogos
+  /**
+   * Busca consultas e avaliações de um psicólogo específico.
+   * Atualiza os estados `consultasPorPsicologo` e `avaliacoesPorPsicologo`.
+   * @param {string} id - ID do psicólogo.
+   */
   const fetchConsultasEAvaliacoes = (id) => {
-  // Consultas
-  fetch(`http://localhost:8080/psicologos/${id}/consultas`)
-    .then(res => res.json())
-    .then(data => {
-      setConsultasPorPsicologo(prev => ({
-        ...prev,
-        [id]: data
-      }));
-    })
-    .catch(err => console.error(err));
+    fetch(`http://localhost:8080/psicologos/${id}/consultas`)
+      .then(res => res.json())
+      .then(data => {
+        setConsultasPorPsicologo(prev => ({
+          ...prev,
+          [id]: data
+        }));
+      })
+      .catch(err => console.error(err));
 
-  // Avaliações
-  fetch(`http://localhost:8080/psicologos/${id}/avaliacoes`)
-    .then(res => res.json())
-    .then(data => {
-      setAvaliacoesPorPsicologo(prev => ({
-        ...prev,
-        [id]: data
-      }));
-    })
-    .catch(err => console.error(err));
-    };
+    fetch(`http://localhost:8080/psicologos/${id}/avaliacoes`)
+      .then(res => res.json())
+      .then(data => {
+        setAvaliacoesPorPsicologo(prev => ({
+          ...prev,
+          [id]: data
+        }));
+      })
+      .catch(err => console.error(err));
+  };
 
+  /**
+   * Redireciona o paciente para a tela principal.
+   */
   const handleHome = () => {
-    router.push('/paciente/home')
-  }
+    router.push('/paciente/home');
+  };
 
+  /**
+   * Realiza o logout do paciente, limpando o localStorage.
+   */
   const handleLogout = () => {
     localStorage.clear();
     router.push('/paciente/login');
   };
 
+  /**
+   * Armazena os IDs no localStorage e redireciona para a página do psicólogo.
+   * @param {string} pacienteId - ID do paciente.
+   * @param {string} psicologoId - ID do psicólogo.
+   */
   const handleOpenPerfilPsicologo = (pacienteId, psicologoId) => {
     localStorage.clear();
     localStorage.setItem('pacienteId', pacienteId);
     localStorage.setItem('psicologoId', psicologoId);
-    router.push('/paciente/psicologo');
+    router.push('/paciente/perfil-psicologo');
   };
 
   return (

@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../components/header/Header';
@@ -6,21 +7,39 @@ import Sidebar from '../components/sidebar/Sidebar';
 import Footer from '../components/footer/Footer';
 import styles from './consulta.module.css';
 
-// Função para colocar a primeira letra maiúscula e o restante minúsculo
+/**
+ * Coloca a primeira letra do texto em maiúscula e o restante em minúscula.
+ * 
+ * @param {string} texto - Texto a ser formatado.
+ * @returns {string} Texto com a primeira letra maiúscula.
+ */
 const formatarTexto = (texto) => {
   return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
 };
 
-// Função para renderizar estrelas baseado na nota
+/**
+ * Renderiza visualmente estrelas de acordo com a nota.
+ * 
+ * @param {number} nota - Nota de 0 a 5.
+ * @returns {string} Estrelas cheias e vazias representando a nota.
+ */
 const renderizarEstrelas = (nota) => {
   const estrelasCheias = '★'.repeat(Math.floor(nota));
   const estrelasVazias = '☆'.repeat(5 - Math.floor(nota));
   return estrelasCheias + estrelasVazias;
 };
 
+/**
+ * Página de exibição dos detalhes de uma consulta, com dados do paciente, da consulta,
+ * do psicólogo e, se houver, da avaliação.
+ * 
+ * @component
+ * @returns {JSX.Element} Componente da página de detalhes da consulta.
+ */
 export default function ConsultaPage() {
   const router = useRouter();
 
+  // Estado com os dados do psicólogo
   const [psicologo, setPsicologo] = useState({
     id: '',
     crp: '',
@@ -45,19 +64,30 @@ export default function ConsultaPage() {
     abordagens: []
   });
 
+  // Estado da consulta, paciente e avaliação
   const [consulta, setConsulta] = useState(null);
   const [paciente, setPaciente] = useState(null);
   const [avaliacao, setAvaliacao] = useState(null);
 
+  /**
+   * Redireciona para a página inicial do psicólogo.
+   */
   const handleHome = () => {
     router.push('/psicologo/home');
   };
 
+  /**
+   * Realiza logout limpando o localStorage e redirecionando para a tela de login.
+   */
   const handleLogout = () => {
     localStorage.clear();
     router.push('/psicologo/login');
   };
 
+  /**
+   * Efeito que busca os dados necessários ao carregar a página:
+   * consulta, paciente, psicólogo e avaliação (se houver).
+   */
   useEffect(() => {
     const consultaId = localStorage.getItem('consultaId');
     const pacienteId = localStorage.getItem('pacienteId');
@@ -95,15 +125,9 @@ export default function ConsultaPage() {
       .then(setPsicologo)
       .catch(err => console.error('Erro no psicólogo:', err));
 
-    // Buscar avaliação da consulta (se houver)
+    // Buscar avaliação (caso exista)
     fetch(`http://localhost:8080/avaliacoes/consulta/${consultaId}`)
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          return null;
-        }
-      })
+      .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data) setAvaliacao(data);
       })
@@ -159,7 +183,7 @@ export default function ConsultaPage() {
             </div>
           </section>
 
-          {/* Seção da Avaliação */}
+          {/* Seção da Avaliação (se existir) */}
           {avaliacao && (
             <section className={styles.avaliacaoSection}>
               <h2>Avaliação</h2>

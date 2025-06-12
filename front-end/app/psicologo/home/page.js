@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../components/header/Header';
@@ -6,9 +7,19 @@ import Sidebar from '../components/sidebar/Sidebar';
 import Footer from '../components/footer/Footer';
 import styles from './home.module.css';
 
+/**
+ * Página principal do psicólogo, exibindo as consultas agendadas, concluídas e canceladas.
+ *
+ * @component
+ * @returns {JSX.Element} Componente da página Home do psicólogo
+ */
 export default function HomePsicologo() {
   const router = useRouter();
 
+  /**
+   * Estado que armazena os dados do psicólogo logado.
+   * @type {[object, Function]}
+   */
   const [psicologo, setPsicologo] = useState({
     id: '',
     crp: '',
@@ -33,11 +44,33 @@ export default function HomePsicologo() {
     abordagens: []
   });
 
+  /**
+   * Consultas com status "AGENDADA".
+   * @type {[Array, Function]}
+   */
   const [consultasAgendadas, setConsultasAgendadas] = useState([]);
+
+  /**
+   * Consultas com status "CONCLUIDA".
+   * @type {[Array, Function]}
+   */
   const [consultasConcluidas, setConsultasConcluidas] = useState([]);
+
+  /**
+   * Consultas com status "CANCELADA".
+   * @type {[Array, Function]}
+   */
   const [consultasCanceladas, setConsultasCanceladas] = useState([]);
+
+  /**
+   * Lista de pacientes cadastrados no sistema.
+   * @type {[Array, Function]}
+   */
   const [pacientes, setPacientes] = useState([]);
 
+  /**
+   * Hook que roda ao montar o componente. Responsável por buscar os dados do psicólogo, pacientes e consultas.
+   */
   useEffect(() => {
     const psicologoId = localStorage.getItem('psicologoId');
     if (!psicologoId) {
@@ -77,23 +110,40 @@ export default function HomePsicologo() {
       .then(res => res.json())
       .then(data => setConsultasCanceladas(data))
       .catch(err => console.error('Erro ao buscar consultas canceladas:', err));
-
   }, []);
 
+  /**
+   * Redireciona para a página inicial do psicólogo.
+   */
   const handleHome = () => {
     router.push('/psicologo/home');
   };
 
+  /**
+   * Efetua logout limpando o localStorage e redireciona para a tela de login.
+   */
   const handleLogout = () => {
     localStorage.clear();
     router.push('/psicologo/login');
   };
 
+  /**
+   * Retorna a URL da foto do paciente ou uma imagem padrão.
+   *
+   * @param {number} idPaciente - ID do paciente
+   * @returns {string} URL da foto
+   */
   const getFotoPaciente = (idPaciente) => {
     const paciente = pacientes.find(p => p.id === idPaciente);
     return paciente ? paciente.foto : '/default-avatar.png';
   };
 
+  /**
+   * Armazena no localStorage os IDs da consulta e do paciente, e redireciona para a tela de consulta.
+   *
+   * @param {number} consultaId - ID da consulta
+   * @param {number} pacienteId - ID do paciente
+   */
   const handleOpenConsulta = (consultaId, pacienteId) => {
     localStorage.setItem('consultaId', consultaId);
     localStorage.setItem('pacienteId', pacienteId);

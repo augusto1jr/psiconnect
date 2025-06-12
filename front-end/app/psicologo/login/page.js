@@ -5,12 +5,37 @@ import Link from "next/link";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-
+/**
+ * Componente de login para psicólogos.
+ * Permite autenticar o usuário psicólogo via email e senha, redirecionando para a home ao sucesso.
+ *
+ * @component
+ * @returns {JSX.Element} Página de login para psicólogos.
+ */
 export default function LoginPsicologo() {
   const router = useRouter();
+
+  /**
+   * Estado que armazena o e-mail informado no campo de login.
+   * @type {[string, Function]}
+   */
   const [email, setEmail] = useState('');
+
+  /**
+   * Estado que armazena a senha informada no campo de login.
+   * @type {[string, Function]}
+   */
   const [senha, setSenha] = useState('');
 
+  /**
+   * Manipula o envio do formulário de login.
+   * Realiza a requisição à API para autenticar o psicólogo.
+   * Salva o ID e nome no `localStorage` e redireciona em caso de sucesso.
+   *
+   * @async
+   * @function
+   * @param {React.FormEvent} e - Evento de envio do formulário.
+   */
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -41,13 +66,19 @@ export default function LoginPsicologo() {
   return (
     <main className={styles.main}>
       <section className={`${styles.login} ${customStyles.login}`}>
-        <div className={customStyles.img}>{/* Imagem aplicada via CSS */}</div>
+        {/* Imagem lateral aplicada via CSS */}
+        <div className={customStyles.img}></div>
+
         <div className={`${styles.form} ${customStyles.form}`}>
-        <div className={styles.logoContainer}>
-        <img src="/psiconnect-logo.png" alt="Logo PsiConnect" className={styles.logoImage} />
-        <h1 className={styles.title}>PsiConnect</h1></div>
+          {/* Logo e título do sistema */}
+          <div className={styles.logoContainer}>
+            <img src="/psiconnect-logo.png" alt="Logo PsiConnect" className={styles.logoImage} />
+            <h1 className={styles.title}>PsiConnect</h1>
+          </div>
+
+          {/* Formulário de login */}
           <form onSubmit={handleLogin} autoComplete="on">
-            {/* Campo de Email */}
+            {/* Campo de e-mail */}
             <div className={styles.formGroup}>
               <label htmlFor="id_email">Email:</label><br />
               <input
@@ -62,7 +93,7 @@ export default function LoginPsicologo() {
               />
             </div>
 
-            {/* Campo de Senha */}
+            {/* Campo de senha */}
             <div className={styles.formGroup}>
               <label htmlFor="id_senha">Senha:</label><br />
               <input
@@ -77,29 +108,32 @@ export default function LoginPsicologo() {
               />
             </div>
 
-            {/* Botão de Login */}
+            {/* Botão para login */}
             <div className={styles.btn_login}>
               <button type="submit">Login</button>
             </div>
 
-            {/* Botão de Cadastro */}
+            {/* Botão de cadastro para novos usuários */}
             <div className={styles.btn_cadastro}>
               <Link href="./cadastro">
                 <button type="button">Cadastrar</button>
               </Link>
             </div>
 
-            {/* Link para Recuperar Senha */}
+            {/* Link para recuperar senha */}
             <div className={styles.btn_forgot}>
               <a href="#">Esqueceu a senha?</a>
             </div>
           </form>
         </div>
       </section>
-        {/* Botão de Voltar */}
-        <div className={styles.btn_voltar}>
-            <button onClick={() => router.push('/')}><span className="material-symbols-outlined">arrow_back</span> Voltar</button>
-        </div>
+
+      {/* Botão para voltar à tela inicial */}
+      <div className={styles.btn_voltar}>
+        <button onClick={() => router.push('/')}>
+          <span className="material-symbols-outlined">arrow_back</span> Voltar
+        </button>
+      </div>
     </main>
   );
 }

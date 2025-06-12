@@ -1,13 +1,27 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../page.module.css';
 import AgendaPsicologo from '../home/AgendaPsicologo';
 import AvaliacoesPsicologo from './AvaliacoesPsicologo';
 
+/**
+ * Componente que exibe o perfil completo de um psicólogo para o paciente.
+ * Inclui foto, CRP, especialidades, abordagens, bio, valor da consulta, agenda,
+ * avaliações e número de atendimentos.
+ * Também possui barra lateral com menu de navegação e informações do paciente logado.
+ * 
+ * @component
+ * @returns {JSX.Element}
+ */
 export default function PerfilPsicologo() {
   const router = useRouter();
 
+  /**
+   * Estado para armazenar os dados do paciente logado.
+   * @type {[Object, Function]}
+   */
   const [paciente, setPaciente] = useState({
     id: '',
     cpf: '',
@@ -29,6 +43,10 @@ export default function PerfilPsicologo() {
     prefAbordagens: []
   });
 
+  /**
+   * Estado para armazenar os dados do psicólogo visualizado.
+   *  @type {(Object|Function)[]} 
+   */
   const [psicologo, setPsicologo] = useState({
     id: '',
     crp: '',
@@ -53,16 +71,33 @@ export default function PerfilPsicologo() {
     abordagens: []
   });
 
+  /**
+   * Armazena as consultas do psicólogo por ID.
+   * @type {[Object.<string, Array>, Function]}
+   */
   const [consultasPorPsicologo, setConsultasPorPsicologo] = useState({});
+
+  /**
+   * Armazena as avaliações do psicólogo por ID.
+   * @type {[Object.<string, Array>, Function]}
+   */
   const [avaliacoesPorPsicologo, setAvaliacoesPorPsicologo] = useState({});
-  
+
+  /**
+   * Disponibilidade fictícia usada para exibição de agenda.
+   * @type {Array<{diaSemana: string, data: string, horarios: string[]}>}
+   */
   const disponibilidadeMockada = [
-    { diaSemana: 'SEG', data: '26 MAI', horarios: ['15:00'] },
-    { diaSemana: 'TER', data: '27 MAI', horarios: ['15:00'] },
-    { diaSemana: 'QUA', data: '28 MAI', horarios: ['14:00', '15:00', '16:00'] },
-    { diaSemana: 'QUI', data: '29 MAI', horarios: ['18:00'] },
+    { diaSemana: 'QUA', data: '18 JUN', horarios: ['18:00'] },
+    { diaSemana: 'QUI', data: '19 JUN', horarios: ['14:00', '15:00', '16:00'] },
+    { diaSemana: 'SEX', data: '20 JUN', horarios: ['18:00'] },
+    { diaSemana: 'SAB', data: '21 JUN', horarios: ['10:00'] }
   ];
 
+  /**
+   * Efeito que roda ao montar o componente.
+   * Busca os dados do paciente e do psicólogo no backend.
+   */
   useEffect(() => {
     const pacienteId = localStorage.getItem('pacienteId');
     const psicologoId = localStorage.getItem('psicologoId');
@@ -71,7 +106,8 @@ export default function PerfilPsicologo() {
       router.push('/app/paciente/login');
       return;
     }
-    
+
+    // Buscar dados do paciente
     fetch(`http://localhost:8080/pacientes/${pacienteId}`)
       .then(res => res.json())
       .then(data => setPaciente(data))
@@ -80,6 +116,7 @@ export default function PerfilPsicologo() {
         router.push('/app/login');
       });
 
+    // Buscar dados do psicólogo
     fetch(`http://localhost:8080/psicologos/${psicologoId}`)
       .then(res => res.json())
       .then(data => {
@@ -92,6 +129,10 @@ export default function PerfilPsicologo() {
       });
   }, []);
 
+  /**
+   * Busca as consultas e avaliações de um psicólogo específico.
+   * @param {string} id - ID do psicólogo.
+   */
   const fetchConsultasEAvaliacoes = (id) => {
     fetch(`http://localhost:8080/psicologos/${id}/consultas`)
       .then(res => res.json())
@@ -114,10 +155,16 @@ export default function PerfilPsicologo() {
       .catch(err => console.error(err));
   };
 
+  /**
+   * Redireciona para a tela inicial do paciente.
+   */
   const handleHome = () => {
     router.push('/paciente/home');
   };
 
+  /**
+   * Realiza logout limpando o localStorage e redirecionando para o login.
+   */
   const handleLogout = () => {
     localStorage.clear();
     router.push('/paciente/login');
@@ -133,7 +180,7 @@ export default function PerfilPsicologo() {
         </div>
       </header>
 
-      {/* Conteúdo Principal */}
+      {/* Conteúdo principal com perfil do psicólogo */}
       <div className={styles.mainContent}>
         {psicologo.id ? (
           (() => {
@@ -148,7 +195,7 @@ export default function PerfilPsicologo() {
 
             return (
               <div className={styles.psicologoContainer}>
-                {/* Card do Psicólogo */}
+                {/* Card principal do psicólogo */}
                 <div className={styles.psicologoCard}>
                   <img
                     src={psicologo.foto || '/default-avatar.jpeg'}
@@ -160,6 +207,7 @@ export default function PerfilPsicologo() {
                       <h3>{psicologo.nome}</h3>
                       <p className={styles.psicologoCrp}>CRP: {psicologo.crp}</p>
 
+                      {/* Chips com especialidades e abordagens */}
                       <div className={styles.chipsContainer}>
                         {psicologo.especialidades.slice(0, 3).map((esp) => (
                           <span key={esp} className={styles.chip}>{esp}</span>
@@ -184,6 +232,7 @@ export default function PerfilPsicologo() {
                           : 'Híbrido'}
                       </p>
 
+                      {/* Estatísticas */}
                       <div className={styles.psicologoStats}>
                         <div className={styles.psicologoStat}>
                           <span className="material-symbols-outlined starIcon">star</span>
@@ -197,13 +246,14 @@ export default function PerfilPsicologo() {
                         </div>
                       </div>
                     </div>
+                    {/* Agenda do psicólogo */}
                     <div className={styles.agendaContainer}>
                       <AgendaPsicologo disponibilidade={disponibilidadeMockada} />
                     </div>
                   </div>
                 </div>
 
-                {/* Informações Extras */}
+                {/* Informações extras */}
                 <div className={styles.psicologoInfoExtra}>
                   <div className={styles.psicologosEspecialidades}>
                     <h3>Especialidades do Psicólogo:</h3>
@@ -228,8 +278,10 @@ export default function PerfilPsicologo() {
                     <p>{psicologo.formacao}</p>
                   </div>
                 </div>
+
+                {/* Avaliações dos pacientes */}
                 <div className={styles.avaliacoesContainer}>
-                  <AvaliacoesPsicologo avaliacoes={avaliacoes}/>
+                  <AvaliacoesPsicologo avaliacoes={avaliacoes} />
                 </div>
               </div>
             );
@@ -239,7 +291,7 @@ export default function PerfilPsicologo() {
         )}
       </div>
 
-      {/* Barra Lateral */}
+      {/* Barra lateral de navegação */}
       <div className={styles.sideBar}>
         <div className={styles.profileBlock}>
           <img src={paciente.foto || '/default-avatar.jpeg'} alt="Foto de perfil" className={styles.avatar} />
@@ -251,6 +303,7 @@ export default function PerfilPsicologo() {
           </div>
         </div>
 
+        {/* Botões de navegação */}
         <button onClick={handleHome} className={styles.navButton}>
           <span className="material-symbols-outlined">home</span>
           <span>Início</span>
@@ -288,6 +341,7 @@ export default function PerfilPsicologo() {
         </div>
       </div>
 
+      {/* Rodapé */}
       <footer className={styles.footer}>
         <p>PsiConnect &copy;</p>
       </footer>
