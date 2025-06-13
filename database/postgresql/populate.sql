@@ -158,7 +158,10 @@ INSERT INTO preferencia_abordagens (id_paciente, id_abordagem) VALUES
 ---------------------------------------------------------------
 INSERT INTO consultas (id_paciente, id_psicologo, data_consulta, status, modalidade, tipo, valor) VALUES
 (1, 1, '2025-05-01 10:00:00', 'CONCLUIDA', 'REMOTA', 'COMUM', 150.00),
-(2, 2, '2025-05-01 11:00:00', 'CONCLUIDA', 'REMOTA', 'COMUM', 180.00),
+(2, 2, '2025-05-01 10:00:00', 'CONCLUIDA', 'REMOTA', 'COMUM', 150.00),
+(6, 2, '2025-05-01 10:00:00', 'CANCELADA', 'REMOTA', 'COMUM', 150.00),
+(1, 2, '2025-05-01 10:00:00', 'AGENDADA', 'REMOTA', 'COMUM', 150.00),
+(2, 2, '2025-05-11 11:00:00', 'CONCLUIDA', 'REMOTA', 'COMUM', 180.00),
 (3, 3, '2025-05-01 12:00:00', 'CONCLUIDA', 'PRESENCIAL', 'SOCIAL', 100.00),
 (4, 4, '2025-05-02 09:00:00', 'CANCELADA', 'REMOTA', 'COMUM', 170.00),
 (5, 5, '2025-05-02 10:00:00', 'CONCLUIDA', 'REMOTA', 'COMUM', 160.00),
