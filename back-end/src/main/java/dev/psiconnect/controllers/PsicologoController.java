@@ -9,10 +9,13 @@ import dev.psiconnect.dtos.responses.AvaliacaoResponseDTO;
 import dev.psiconnect.entities.*;
 import dev.psiconnect.repositories.*;
 
+import dev.psiconnect.services.PsicologoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,7 +28,7 @@ import java.util.stream.Collectors;
 public class PsicologoController {
 
     @Autowired
-    private PsicologoRepository psicologoRepository;
+    private PsicologoService psicologoService;
 
     @Autowired
     private EnderecoPsiRepository enderecoPsiRepository;
@@ -42,6 +45,10 @@ public class PsicologoController {
     @Autowired
     private AvaliacaoRepository avaliacaoRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+
     /**
      * Cadastra um psicólogo com dados genéricos para teste.
      *
@@ -54,7 +61,9 @@ public class PsicologoController {
     public ResponseEntity<?> savePsicologo(@RequestBody PsicologoRequestDTO data) {
         Psicologo psicologo = new Psicologo();
         psicologo.setEmail(data.email());
-        psicologo.setSenha(data.senha());
+
+        // Criptografa a senha
+        psicologo.setSenha(passwordEncoder.encode(data.senha()));
 
         psicologo.setNome("Psicólogo Teste");
         psicologo.setCrp("00/00000-" + (new Random().nextInt(900) + 100));
@@ -65,7 +74,7 @@ public class PsicologoController {
         psicologo.setAceitaBeneficio(false);
         psicologo.setModalidadeAtendimento(Psicologo.ModalidadeAtendimento.REMOTO);
 
-        psicologoRepository.save(psicologo);
+        psicologoService.salvar(psicologo);
 
         Map<String, Object> resposta = new HashMap<>();
         resposta.put("mensagem", "Cadastro realizado com sucesso!");
@@ -84,21 +93,27 @@ public class PsicologoController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/login")
     public ResponseEntity<?> loginPsicologo(@RequestBody Psicologo loginData) {
-        Psicologo psicologo = psicologoRepository.findByEmail(loginData.getEmail());
+        Psicologo psicologo = psicologoService.buscarPorEmail(loginData.getEmail());
 
-        if (psicologo != null && psicologo.getSenha().equals(loginData.getSenha())) {
-            Map<String, Object> resposta = new HashMap<>();
-            resposta.put("mensagem", "Login realizado com sucesso!");
-            resposta.put("id", psicologo.getId());
-            resposta.put("nome", psicologo.getNome());
-
-            return ResponseEntity.ok(resposta);
-        } else {
-            Map<String, String> erro = new HashMap<>();
-            erro.put("mensagem", "E-mail ou senha inválidos.");
-            return ResponseEntity.status(401).body(erro);
+        if (psicologo == null) {
+            return ResponseEntity.status(401).body(Map.of("mensagem", "E-mail ou senha inválidos."));
         }
+
+        System.out.println("Senha recebida: " + loginData.getSenha());
+        System.out.println("Hash salvo no banco: " + psicologo.getSenha());
+
+        if (!passwordEncoder.matches(loginData.getSenha(), psicologo.getSenha())) {
+            return ResponseEntity.status(401).body(Map.of("mensagem", "E-mail ou senha inválidos."));
+        }
+
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("mensagem", "Login realizado com sucesso!");
+        resposta.put("id", psicologo.getId());
+        resposta.put("nome", psicologo.getNome());
+
+        return ResponseEntity.ok(resposta);
     }
+
 
     /**
      * Retorna todos os psicólogos cadastrados.
@@ -108,7 +123,8 @@ public class PsicologoController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public ResponseEntity<List<PsicologoResponseDTO>> getAllPsicologos() {
-        List<PsicologoResponseDTO> lista = psicologoRepository.findAll().stream()
+        List<PsicologoResponseDTO> lista = psicologoService.buscarTodos()
+                .stream()
                 .map(PsicologoResponseDTO::new)
                 .collect(Collectors.toList());
 
@@ -124,7 +140,7 @@ public class PsicologoController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}")
     public ResponseEntity<PsicologoResponseDTO> getPsicologoById(@PathVariable Long id) {
-        return psicologoRepository.findById(id)
+        return psicologoService.buscarPorId(id)
                 .map(psicologo -> ResponseEntity.ok(new PsicologoResponseDTO(psicologo)))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -139,11 +155,11 @@ public class PsicologoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deletePsicologo(@PathVariable Long id) {
-        if (!psicologoRepository.existsById(id)) {
+        if (!psicologoService.existePorId(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        psicologoRepository.deleteById(id);
+        psicologoService.deletarPorId(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -158,7 +174,7 @@ public class PsicologoController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<?> updatePsicologo(@PathVariable Long id, @RequestBody PsicologoRequestDTO data) {
-        return psicologoRepository.findById(id)
+        return psicologoService.buscarPorId(id)
                 .map(psicologo -> {
                     psicologo.setCrp(data.crp());
                     psicologo.setNome(data.nome());
@@ -166,7 +182,7 @@ public class PsicologoController {
                     psicologo.setBio(data.bio());
                     psicologo.setFormacao(data.formacao());
                     psicologo.setContato(data.contato());
-                    psicologo.setSenha(data.senha());
+                    psicologo.setSenha(passwordEncoder.encode(data.senha()));
                     psicologo.setValorConsulta(data.valorConsulta());
                     psicologo.setAceitaBeneficio(data.aceitaBeneficio());
                     psicologo.setModalidadeAtendimento(data.modalidadeAtendimento());
@@ -189,7 +205,7 @@ public class PsicologoController {
                     psicologo.setEspecialidades(especialidadeRepository.findAllById(data.especialidades()));
                     psicologo.setAbordagens(abordagemRepository.findAllById(data.abordagens()));
 
-                    psicologoRepository.save(psicologo);
+                    psicologoService.salvar(psicologo);
                     return ResponseEntity.ok(new PsicologoResponseDTO(psicologo));
                 })
                 .orElse(ResponseEntity.notFound().build());
@@ -228,7 +244,7 @@ public class PsicologoController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}/avaliacoes")
     public ResponseEntity<List<AvaliacaoResponseDTO>> getAvaliacoesByPsicologo(@PathVariable Long id) {
-        if (!psicologoRepository.existsById(id)) {
+        if (!psicologoService.existePorId(id)) {
             return ResponseEntity.notFound().build();
         }
 

@@ -6,10 +6,12 @@ import dev.psiconnect.entities.Avaliacao;
 import dev.psiconnect.entities.Consulta;
 import dev.psiconnect.entities.Paciente;
 import dev.psiconnect.entities.Psicologo;
-import dev.psiconnect.repositories.AvaliacaoRepository;
-import dev.psiconnect.repositories.ConsultaRepository;
-import dev.psiconnect.repositories.PacienteRepository;
-import dev.psiconnect.repositories.PsicologoRepository;
+
+import dev.psiconnect.services.AvaliacaoService;
+import dev.psiconnect.services.ConsultaService;
+import dev.psiconnect.services.PacienteService;
+import dev.psiconnect.services.PsicologoService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,16 +28,16 @@ import java.util.stream.Collectors;
 public class AvaliacaoController {
 
     @Autowired
-    private AvaliacaoRepository avaliacaoRepository;
+    private AvaliacaoService avaliacaoService;
 
     @Autowired
-    private ConsultaRepository consultaRepository;
+    private ConsultaService consultaService;
 
     @Autowired
-    private PsicologoRepository psicologoRepository;
+    private PsicologoService psicologoService;
 
     @Autowired
-    private PacienteRepository pacienteRepository;
+    private PacienteService pacienteService;
 
     /**
      * Endpoint para salvar uma nova avaliação.
@@ -47,9 +49,9 @@ public class AvaliacaoController {
     @PostMapping
     @Transactional
     public ResponseEntity<String> saveAvaliacao(@RequestBody AvaliacaoRequestDTO data) {
-        Psicologo psicologo = psicologoRepository.findById(data.idPsicologo()).orElse(null);
-        Paciente paciente = pacienteRepository.findById(data.idPaciente()).orElse(null);
-        Consulta consulta = consultaRepository.findById(data.idConsulta()).orElse(null);
+        Psicologo psicologo = psicologoService.buscarPorId(data.idPsicologo()).orElse(null);
+        Paciente paciente = pacienteService.buscarPorId(data.idPaciente()).orElse(null);
+        Consulta consulta = consultaService.buscarPorId(data.idConsulta()).orElse(null);
 
         if (psicologo == null || paciente == null || consulta == null) {
             return ResponseEntity.badRequest().body("Psicólogo, paciente ou consulta não encontrados.");
@@ -61,7 +63,7 @@ public class AvaliacaoController {
         }
 
         Avaliacao avaliacao = new Avaliacao(data, consulta, psicologo, paciente);
-        avaliacaoRepository.save(avaliacao);
+        avaliacaoService.salvar(avaliacao);
 
         return ResponseEntity.status(201).body("Avaliação criada com sucesso.");
     }
@@ -74,7 +76,7 @@ public class AvaliacaoController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
     public ResponseEntity<List<AvaliacaoResponseDTO>> getAllAvaliacoes() {
-        List<AvaliacaoResponseDTO> avaliacoes = avaliacaoRepository.findAll().stream()
+        List<AvaliacaoResponseDTO> avaliacoes = avaliacaoService.buscarTodos().stream()
                 .map(AvaliacaoResponseDTO::new)
                 .collect(Collectors.toList());
 
@@ -90,7 +92,7 @@ public class AvaliacaoController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}")
     public ResponseEntity<AvaliacaoResponseDTO> getAvaliacaoById(@PathVariable Long id) {
-        return avaliacaoRepository.findById(id)
+        return avaliacaoService.buscarPorId(id)
                 .map(avaliacao -> ResponseEntity.ok(new AvaliacaoResponseDTO(avaliacao)))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -104,7 +106,7 @@ public class AvaliacaoController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/consulta/{id}")
     public ResponseEntity<AvaliacaoResponseDTO> getAvaliacaoByConsultaId(@PathVariable Long id) {
-        return avaliacaoRepository.findByConsultaId(id)
+        return avaliacaoService.buscarPorConsultaId(id)
                 .map(avaliacao -> ResponseEntity.ok(new AvaliacaoResponseDTO(avaliacao)))
                 .orElse(ResponseEntity.notFound().build());
     }

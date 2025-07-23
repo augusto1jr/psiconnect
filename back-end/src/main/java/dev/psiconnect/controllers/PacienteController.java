@@ -4,11 +4,16 @@ import dev.psiconnect.dtos.requests.EnderecoPacRequestDTO;
 import dev.psiconnect.dtos.requests.PacienteRequestDTO;
 import dev.psiconnect.dtos.responses.PacienteResponseDTO;
 import dev.psiconnect.dtos.responses.PsicologoResponseDTO;
+
 import dev.psiconnect.entities.*;
 import dev.psiconnect.repositories.*;
+
+import dev.psiconnect.services.PacienteService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -23,7 +28,7 @@ import java.util.stream.Collectors;
 public class PacienteController {
 
     @Autowired
-    private PacienteRepository pacienteRepository;
+    private PacienteService pacienteService;
 
     @Autowired
     private EnderecoPacRepository enderecoPacRepository;
@@ -37,6 +42,9 @@ public class PacienteController {
     @Autowired
     private PsicologoRepository psicologoRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     /**
      * Cadastro simplificado de paciente (apenas e-mail e senha, demais dados são gerados).
      */
@@ -45,7 +53,9 @@ public class PacienteController {
     public ResponseEntity<Map<String, Object>> savePaciente(@RequestBody PacienteRequestDTO data) {
         Paciente paciente = new Paciente();
         paciente.setEmail(data.email());
-        paciente.setSenha(data.senha());
+
+        // Criptografa a senha
+        paciente.setSenha(passwordEncoder.encode(data.senha()));
 
         // Dados gerados automaticamente
         paciente.setNome("Paciente Teste");
@@ -55,7 +65,7 @@ public class PacienteController {
         paciente.setContato("000000000");
         paciente.setBeneficioSocial(Paciente.BeneficioSocial.NENHUM);
 
-        pacienteRepository.save(paciente);
+        pacienteService.salvar(paciente);
 
         Map<String, Object> resposta = new HashMap<>();
         resposta.put("mensagem", "Cadastro realizado com sucesso!");
@@ -65,7 +75,7 @@ public class PacienteController {
         return ResponseEntity.ok(resposta);
     }
 
-        /* ENDPOINT CADASTRO COMPLETO
+    /* ENDPOINT CADASTRO COMPLETO
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/cadastro")
     @Transactional
@@ -99,9 +109,9 @@ public class PacienteController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> loginPaciente(@RequestBody Paciente loginData) {
-        Paciente paciente = pacienteRepository.findByEmail(loginData.getEmail());
+        Paciente paciente = pacienteService.buscarPorEmail(loginData.getEmail());
 
-        if (paciente != null && paciente.getSenha().equals(loginData.getSenha())) {
+        if (paciente != null && passwordEncoder.matches(loginData.getSenha(), paciente.getSenha())) {
             Map<String, Object> resposta = new HashMap<>();
             resposta.put("mensagem", "Login realizado com sucesso!");
             resposta.put("id", paciente.getId());
@@ -119,7 +129,7 @@ public class PacienteController {
      */
     @GetMapping
     public ResponseEntity<List<PacienteResponseDTO>> getAllPacientes() {
-        List<PacienteResponseDTO> pacientes = pacienteRepository.findAll().stream()
+        List<PacienteResponseDTO> pacientes = pacienteService.buscarTodos().stream()
                 .map(PacienteResponseDTO::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(pacientes);
@@ -130,7 +140,7 @@ public class PacienteController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<PacienteResponseDTO> getPacienteById(@PathVariable Long id) {
-        return pacienteRepository.findById(id)
+        return pacienteService.buscarPorId(id)
                 .map(paciente -> ResponseEntity.ok(new PacienteResponseDTO(paciente)))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -141,10 +151,10 @@ public class PacienteController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deletePaciente(@PathVariable Long id) {
-        if (!pacienteRepository.existsById(id)) {
+        if (!pacienteService.existePorId(id)) {
             return ResponseEntity.notFound().build();
         }
-        pacienteRepository.deleteById(id);
+        pacienteService.deletarPorId(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -154,7 +164,7 @@ public class PacienteController {
     @PutMapping("/{id}")
     @org.springframework.transaction.annotation.Transactional
     public ResponseEntity<?> updatePaciente(@PathVariable Long id, @RequestBody PacienteRequestDTO data) {
-        return pacienteRepository.findById(id)
+        return pacienteService.buscarPorId(id)
                 .map(paciente -> {
                     // Atualiza dados pessoais
                     paciente.setCpf(data.cpf());
@@ -162,7 +172,7 @@ public class PacienteController {
                     paciente.setEmail(data.email());
                     paciente.setBio(data.bio());
                     paciente.setContato(data.contato());
-                    paciente.setSenha(data.senha());
+                    paciente.setSenha(passwordEncoder.encode(data.senha()));
                     paciente.setBeneficioSocial(data.beneficioSocial());
 
                     // Atualiza endereço, se houver
@@ -189,7 +199,7 @@ public class PacienteController {
                             abordagemRepository.findAllById(data.prefAbordagens())
                     );
 
-                    pacienteRepository.save(paciente);
+                    pacienteService.salvar(paciente);
                     return ResponseEntity.ok(new PacienteResponseDTO(paciente));
                 })
                 .orElse(ResponseEntity.notFound().build());
